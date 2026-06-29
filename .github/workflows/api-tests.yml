@@ -28,12 +28,7 @@ jobs:
           cache-dependency-path: dog-api-tests/pom.xml
 
       - name: Run tests
-        run: mvn -f dog-api-tests/pom.xml clean test
-
-      - name: Generate Allure report
-        if: always()
-        continue-on-error: true
-        run: mvn -f dog-api-tests/pom.xml allure:report
+        run: mvn -f dog-api-tests/pom.xml test
 
       - name: Upload Surefire reports
         if: always()
@@ -41,14 +36,5 @@ jobs:
         with:
           name: surefire-reports
           path: dog-api-tests/target/surefire-reports/
-          if-no-files-found: warn
-          retention-days: 7
-
-      - name: Upload Allure report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-report
-          path: dog-api-tests/target/site/allure-maven-plugin/
           if-no-files-found: warn
           retention-days: 7
