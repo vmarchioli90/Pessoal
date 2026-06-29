@@ -1,0 +1,17 @@
+*.jtl
+*.log
+
+reports/*
+!reports/.gitkeep
+
+results/*-results.jtl
+results/*.csv
+
+apache-jmeter-*/
+
+.DS_Store
+Thumbs.db
+
+.idea/
+.vscode/
+*.iml

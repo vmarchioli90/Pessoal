@@ -1,0 +1,5 @@
+inputName,address,city,state,zipCode,cardType,creditCardNumber,creditCardMonth,creditCardYear,nameOnCard,rememberMe
+Maria QA,Av Paulista 1000,Sao Paulo,SP,01310000,visa,4111111111111111,12,2030,Maria QA,on
+Joao Teste,Rua das Flores 250,Curitiba,PR,80000000,amex,378282246310005,10,2029,Joao Teste,on
+Ana Performance,Av Brasil 500,Rio de Janeiro,RJ,20000000,visa,4012888888881881,08,2031,Ana Performance,on
+Carlos Automacao,Rua XV 123,Porto Alegre,RS,90000000,dinersclub,30569309025904,05,2028,Carlos Automacao,on
