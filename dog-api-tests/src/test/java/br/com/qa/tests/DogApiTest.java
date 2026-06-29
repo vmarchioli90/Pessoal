@@ -1,10 +1,10 @@
 package br.com.qa.tests;
 
 import br.com.qa.client.DogApiClient;
-import io.qameta.allure.DisplayName;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
