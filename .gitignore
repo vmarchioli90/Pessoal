@@ -4,6 +4,16 @@ playwright-report/
 test-results/
 blob-report/
 
+target/
+.allure/
+allure-results/
+allure-report/
+
+*.jtl
+*.log
+reports/*
+!reports/.gitkeep
+
 .env
 .env.*
 

@@ -1,94 +1,218 @@
-# Blog do Agi - Testes Automatizados com Playwright
+# Projetos de QA Automation
 
-Projeto de automacao web criado para validar a funcionalidade de busca de artigos do Blog do Agi.
+Repositorio com tres projetos de teste tecnico de QA:
 
-O alvo dos testes e a busca acessada pela lupa no canto superior direito do site:
+- Automacao Web com Playwright para o Blog do Agi.
+- Automacao de API com Java, RestAssured, JUnit 5 e Allure para a Dog API.
+- Testes de Performance com Apache JMeter para o BlazeDemo.
 
-https://blogdoagi.com.br/
+O objetivo e manter cada projeto simples, organizado e facil de executar pelo avaliador.
 
-Os testes tambem consideram o redirecionamento do dominio `blogdoagi.com.br` para `blog.agibank.com.br`, caso ele aconteca durante a execucao.
+## Execucao rapida pela raiz
 
-## Tecnologias utilizadas
-
-- Node.js
-- JavaScript
-- Playwright
-- GitHub Actions
-
-## Cenarios cobertos
-
-- Buscar por um termo existente, como `FGTS`, validando que a pagina retorna resultados relacionados.
-- Buscar por um termo inexistente, como `termoqaautomatizadoinexistente123`, validando que o sistema apresenta uma mensagem adequada para ausencia de resultados.
-
-## Pre-requisitos
-
-- Node.js 18 ou superior
-- npm
-- Git
-
-O projeto pode ser executado em Windows, Linux e MacOS.
-
-## Instalacao
-
-Clone o repositorio e instale as dependencias:
+Instale as dependencias Node.js do projeto Web:
 
 ```bash
 npm install
-```
-
-Instale os navegadores usados pelo Playwright:
-
-```bash
 npx playwright install
 ```
 
-## Execucao dos testes
-
-Para executar os testes em modo headless:
+Execute os testes Web:
 
 ```bash
-npm test
+npm run test:web
 ```
 
-## Execucao em modo headed
-
-Para acompanhar a execucao no navegador:
+Execute os testes Web com navegador aberto:
 
 ```bash
 npm run test:headed
 ```
 
-## Relatorio
+Execute os testes de API:
 
-Apos a execucao, abra o relatorio HTML do Playwright com:
+```bash
+npm run test:api
+```
+
+Execute Web + API:
+
+```bash
+npm run test:all
+```
+
+Execute o teste de carga JMeter:
+
+```bash
+npm run test:performance:load
+```
+
+Execute o teste de pico JMeter:
+
+```bash
+npm run test:performance:spike
+```
+
+Abra os relatorios:
+
+```bash
+npm run report
+npm run report:api
+npm run report:performance:load
+npm run report:performance:spike
+```
+
+## Pre-requisitos
+
+Para o projeto Web:
+
+- Node.js 18 ou superior
+- npm
+
+Para o projeto API:
+
+- Java 17
+- Maven
+
+Para o projeto Performance:
+
+- Java instalado, preferencialmente Java 17
+- Apache JMeter instalado
+- `jmeter` disponivel no `PATH` ou `JMETER_HOME` configurado
+
+## Projetos
+
+### Web - Blog do Agi
+
+Pasta/arquivos principais:
+
+```text
+pages/
+tests/
+playwright.config.js
+```
+
+Site alvo:
+
+```text
+https://blogdoagi.com.br/
+```
+
+Cenarios cobertos:
+
+- Buscar por um termo existente, como `FGTS`, validando resultados relacionados.
+- Buscar por um termo inexistente, como `termoqaautomatizadoinexistente123`, validando mensagem de ausencia de resultados.
+
+O teste considera o redirecionamento de `blogdoagi.com.br` para `blog.agibank.com.br`.
+
+Documentacao especifica do projeto Web esta neste README porque ele fica na raiz do repositorio.
+
+### API - Dog API
+
+Pasta:
+
+```text
+dog-api-tests/
+```
+
+Base URL:
+
+```text
+https://dog.ceo/api
+```
+
+Endpoints cobertos:
+
+- `GET /breeds/list/all`
+- `GET /breed/{breed}/images`
+- `GET /breeds/image/random`
+
+Documentacao especifica:
+
+```text
+dog-api-tests/README.md
+```
+
+### Performance - BlazeDemo
+
+Pasta:
+
+```text
+blazedemo-performance-tests/
+```
+
+URL alvo:
+
+```text
+https://www.blazedemo.com
+```
+
+Planos JMeter:
+
+- `jmeter/blazedemo-load-test.jmx`
+- `jmeter/blazedemo-spike-test.jmx`
+
+Documentacao especifica:
+
+```text
+blazedemo-performance-tests/README.md
+```
+
+## Relatorios
+
+Web Playwright:
 
 ```bash
 npm run report
 ```
 
+API Allure:
+
+```bash
+npm run report:api
+```
+
+Performance JMeter:
+
+```bash
+npm run report:performance:load
+npm run report:performance:spike
+```
+
 ## GitHub Actions
 
-O workflow esta configurado em `.github/workflows/playwright.yml`.
+Workflows configurados:
 
-Ele executa os testes automaticamente em:
+```text
+.github/workflows/playwright.yml
+.github/workflows/api-tests.yml
+```
 
-- `push` nas branches `main` e `master`
-- `pull_request` para as branches `main` e `master`
+O workflow Web executa os testes Playwright.
 
-O relatorio HTML do Playwright e publicado como artefato da execucao, mesmo quando algum teste falha.
+O workflow API executa os testes Java com Maven e gera artefatos de relatorio.
 
-## Estrutura do projeto
+## Documentacao tecnica
+
+Existe uma documentacao consolidada para apresentacao tecnica dos tres projetos:
+
+```text
+DOCUMENTACAO_TECNICA_DOS_TESTES.md
+```
+
+Ela explica arquitetura, decisoes tecnicas, cenarios, metricas, boas praticas e pontos para defender em entrevista.
+
+## Estrutura geral
 
 ```text
 .
 ├── .github/
 │   └── workflows/
-│       └── playwright.yml
+├── blazedemo-performance-tests/
+├── dog-api-tests/
 ├── pages/
-│   └── blogPage.js
 ├── tests/
-│   └── blog-search.spec.js
-├── .gitignore
+├── DOCUMENTACAO_TECNICA_DOS_TESTES.md
 ├── package.json
 ├── playwright.config.js
 └── README.md

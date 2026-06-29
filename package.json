@@ -5,8 +5,16 @@
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
+    "test:web": "playwright test",
     "test:headed": "playwright test --headed",
-    "report": "playwright show-report"
+    "test:api": "cd dog-api-tests && mvn clean test",
+    "test:all": "npm run test:web && npm run test:api",
+    "report": "playwright show-report",
+    "report:api": "cd dog-api-tests && mvn allure:report",
+    "test:performance:load": "cd blazedemo-performance-tests && scripts\\run-load-test.bat",
+    "test:performance:spike": "cd blazedemo-performance-tests && scripts\\run-spike-test.bat",
+    "report:performance:load": "start blazedemo-performance-tests\\reports\\load-test-report\\index.html",
+    "report:performance:spike": "start blazedemo-performance-tests\\reports\\spike-test-report\\index.html"
   },
   "keywords": [
     "playwright",
