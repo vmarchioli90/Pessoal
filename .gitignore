@@ -9,10 +9,12 @@ target/
 allure-results/
 allure-report/
 
+# Performance/JMeter generated artifacts
 *.jtl
 *.log
-reports/*
-!reports/.gitkeep
+blazedemo-performance-tests/reports/**
+!blazedemo-performance-tests/reports/.gitkeep
+blazedemo-performance-tests/results/*-results.jtl
 
 .env
 .env.*

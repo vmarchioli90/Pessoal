@@ -13,13 +13,13 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Epic("Dog API")
-@Feature("Consultas de racas e imagens")
+@Feature("Consultas de raças e imagens")
 class DogApiTest {
 
     private final DogApiClient dogApiClient = new DogApiClient();
 
     @Test
-    @DisplayName("Deve listar todas as racas disponiveis")
+    @DisplayName("Deve listar todas as raças disponíveis")
     void shouldListAllAvailableBreeds() {
         Response response = dogApiClient.getAllBreeds();
 
@@ -33,7 +33,7 @@ class DogApiTest {
     }
 
     @Test
-    @DisplayName("Deve consultar imagens de uma raca valida")
+    @DisplayName("Deve consultar imagens de uma raça válida")
     void shouldGetImagesByValidBreed() {
         Response response = dogApiClient.getImagesByBreed("hound");
 
@@ -49,7 +49,7 @@ class DogApiTest {
     }
 
     @Test
-    @DisplayName("Deve consultar uma imagem aleatoria")
+    @DisplayName("Deve consultar uma imagem aleatória")
     void shouldGetRandomImage() {
         Response response = dogApiClient.getRandomImage();
 
@@ -64,7 +64,7 @@ class DogApiTest {
     }
 
     @Test
-    @DisplayName("Deve retornar erro ao consultar imagens de uma raca inexistente")
+    @DisplayName("Deve retornar erro ao consultar imagens de uma raça inexistente")
     void shouldReturnErrorWhenBreedDoesNotExist() {
         Response response = dogApiClient.getImagesByBreed("racainexistenteqa");
 

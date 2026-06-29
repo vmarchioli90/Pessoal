@@ -1,7 +1,8 @@
+# JMeter generated artifacts
 *.jtl
 *.log
 
-reports/*
+reports/**
 !reports/.gitkeep
 
 results/*-results.jtl

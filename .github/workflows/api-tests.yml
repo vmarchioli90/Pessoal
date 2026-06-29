@@ -14,9 +14,6 @@ jobs:
   api-tests:
     name: Run API tests
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: dog-api-tests
 
     steps:
       - name: Checkout repository
@@ -31,11 +28,12 @@ jobs:
           cache-dependency-path: dog-api-tests/pom.xml
 
       - name: Run tests
-        run: mvn clean test
+        run: mvn -f dog-api-tests/pom.xml clean test
 
       - name: Generate Allure report
         if: always()
-        run: mvn allure:report
+        continue-on-error: true
+        run: mvn -f dog-api-tests/pom.xml allure:report
 
       - name: Upload Surefire reports
         if: always()
@@ -43,6 +41,7 @@ jobs:
         with:
           name: surefire-reports
           path: dog-api-tests/target/surefire-reports/
+          if-no-files-found: warn
           retention-days: 7
 
       - name: Upload Allure report
@@ -51,4 +50,5 @@ jobs:
         with:
           name: allure-report
           path: dog-api-tests/target/site/allure-maven-plugin/
+          if-no-files-found: warn
           retention-days: 7
