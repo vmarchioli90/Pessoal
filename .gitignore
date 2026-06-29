@@ -1,10 +1,16 @@
 node_modules/
 
+# Playwright generated reports
 playwright-report/
 test-results/
 blob-report/
 
+# Maven/Allure generated reports
 target/
+dog-api-tests/target/
+dog-api-tests/.allure/
+dog-api-tests/allure-results/
+dog-api-tests/allure-report/
 .allure/
 allure-results/
 allure-report/
