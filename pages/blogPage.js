@@ -7,9 +7,7 @@ class BlogPage {
   constructor(page) {
     this.page = page;
     this.searchButton = page.getByRole('button', { name: /pesquisar|search/i });
-    this.searchInput = page.getByRole('searchbox').or(
-      page.getByPlaceholder(/pesquisar|busca|search/i)
-    );
+    this.searchInput = page.locator('input[name="s"]:visible, input[type="search"]:visible');
     this.articleTitles = page.locator('article h2 a, article h3 a');
     this.pageTitle = page.locator('h1, .page-title').first();
     this.noResultsMessage = page.getByText(/nada foi encontrado|nenhum resultado|não encontramos|sem resultado/i);
@@ -23,9 +21,10 @@ class BlogPage {
 
   async searchFor(term) {
     await this.searchButton.click();
-    await expect(this.searchInput).toBeVisible();
-    await this.searchInput.fill(term);
-    await this.searchInput.press('Enter');
+    const visibleSearchInput = this.searchInput.first();
+    await expect(visibleSearchInput).toBeVisible();
+    await visibleSearchInput.fill(term);
+    await visibleSearchInput.press('Enter');
     await this.page.waitForLoadState('domcontentloaded');
   }
 
