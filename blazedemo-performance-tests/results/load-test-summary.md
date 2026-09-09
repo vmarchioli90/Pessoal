@@ -1,43 +1,35 @@
-# Load Test Summary
+# Relatório do Teste de Carga
 
-Preencha este documento apos executar o teste de carga. Nao declarar aprovacao sem evidencias reais da execucao.
+## Configuração da execução
 
-## Dados da Execucao
+- Data: 09/09/2026
+- Ambiente gerador: execução local em Windows 11
+- Java: 17.0.19
+- JMeter: 5.6.3
+- Plano: `jmeter/blazedemo-load-test.jmx`
+- Duração configurada: 300 segundos
+- Threads: 100
+- Ramp-up: 120 segundos
+- Throughput alvo: 15.000 amostras/minuto (250 req/s)
 
-- Data da execucao:
-- Maquina utilizada:
-- Sistema operacional:
-- Versao do Java:
-- Versao do JMeter:
-- Plano executado: `jmeter/blazedemo-load-test.jmx`
-- Duracao configurada:
-- Threads configuradas:
-- Ramp-up configurado:
-- Throughput alvo configurado:
+## Resultados observados
 
-## Resultados Observados
+- Requisições HTTP: 62.187
+- Throughput geral: 207,05 req/s
+- Percentil 90: 427 ms
+- Tempo médio: 313,67 ms
+- Taxa de erro: 0,00%
+- Resultado: **Reprovado**
 
-- Total de amostras:
-- Throughput obtido:
-- Percentil 90 obtido:
-- Tempo medio:
-- Taxa de erro:
-- Resultado: Aprovado/Reprovado
+## Conclusão
 
-## Evidencias
+O percentil 90 permaneceu abaixo do limite de 2.000 ms e não houve erros. Entretanto, o throughput observado foi 207,05 req/s, abaixo da meta mínima de 250 req/s. Portanto, esta execução não demonstra o atendimento integral do critério de aceitação.
 
-- Arquivo `.jtl`:
-- Relatorio HTML:
-- Prints ou anexos relevantes:
+O Constant Throughput Timer define uma taxa desejada, mas não garante que ela seja alcançada. Uma nova execução deve revisar a capacidade da máquina geradora, o número de threads e as condições de rede antes de atribuir o limite observado ao serviço.
 
-## Motivo da Conclusao
+## Evidências geradas
 
-Descrever se o criterio foi atendido:
+- Dados brutos locais: `results/load-test-results.jtl`
+- Dashboard local: `reports/load-test-report/index.html`
 
-- Throughput maior ou igual a 250 req/s.
-- Percentil 90 menor que 2000 ms.
-- Baixa taxa de erro, preferencialmente 0%.
-
-Conclusao:
-
-> Preencher apos a execucao.
+Os artefatos acima são gerados pelos scripts e ignorados pelo Git. Este resumo versionado registra as métricas obtidas na execução real.

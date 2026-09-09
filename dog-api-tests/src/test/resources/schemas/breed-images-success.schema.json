@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "required": ["message", "status"],
+  "additionalProperties": false,
+  "properties": {
+    "message": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "format": "uri"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["success"]
+    }
+  }
+}

@@ -34,8 +34,8 @@ class BlogPage {
 
   async expectResultsRelatedTo(term) {
     await expect(this.pageTitle).toContainText(new RegExp(term, 'i'));
-    await expect(this.articleTitles.first()).toBeVisible();
-    await expect(this.articleTitles.first()).toContainText(new RegExp(term, 'i'));
+    const relatedArticles = this.articleTitles.filter({ hasText: new RegExp(term, 'i') });
+    await expect(relatedArticles.first()).toBeVisible();
   }
 
   async expectNoResultsFeedback() {

@@ -64,7 +64,7 @@ blazedemo-performance-tests/
 
 - Java instalado.
 - Apache JMeter instalado.
-- `JMETER_HOME` configurado ou comando `jmeter` disponivel no `PATH`.
+- Comando `jmeter` disponivel no `PATH` (inclua `%JMETER_HOME%\\bin` ou `$JMETER_HOME/bin` no `PATH`, se utilizar essa variavel).
 
 Valide a instalacao:
 
@@ -209,12 +209,12 @@ Por isso, a avaliacao deve ser feita pelo throughput de requisicoes/samples apre
 
 ## Relatorio de execucao
 
-Use os arquivos abaixo para documentar a execucao real:
+Os resultados da execucao real ficam documentados em:
 
 - `results/load-test-summary.md`
 - `results/spike-test-summary.md`
 
-Eles possuem campos para:
+Os resumos registram:
 
 - Data da execucao.
 - Maquina utilizada.
@@ -229,13 +229,13 @@ Eles possuem campos para:
 - Evidencias.
 - Motivo da conclusao.
 
-Nao preencha esses arquivos com resultados estimados. Os valores devem vir de uma execucao real.
+Os valores publicados nesses arquivos vieram de uma execucao real. Resultados futuros devem substituir os dados somente depois de uma nova execucao completa e verificavel.
 
 ## Conclusao
 
-O projeto esta preparado para executar testes de carga e pico contra a aplicacao real BlazeDemo.
+O projeto executa testes de carga e pico contra a aplicacao real BlazeDemo. Na execucao registrada em `results/`, o P90 e a taxa de erro atenderam ao esperado, mas a meta de 250 req/s nao foi alcancada. Por isso, ambos os resultados foram classificados como reprovados de forma conservadora.
 
-A conclusao final deve ser registrada somente apos rodar os testes, analisar o relatorio HTML e anexar as evidencias. Sem execucao real, nao e correto afirmar que o criterio de aceitacao foi satisfeito.
+Os dashboards HTML e arquivos JTL sao gerados localmente e nao sao versionados. Os resumos Markdown preservam as metricas e a conclusao; uma nova avaliacao deve ser baseada em uma nova execucao, sem reutilizar resultados antigos.
 
 ## Consideracoes tecnicas
 
