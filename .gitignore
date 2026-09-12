@@ -16,12 +16,8 @@ dog-api-tests/allure-report/
 allure-results/
 allure-report/
 
-# Performance/JMeter generated artifacts
-*.jtl
+# Logs and local-only artifacts
 *.log
-blazedemo-performance-tests/reports/**
-!blazedemo-performance-tests/reports/.gitkeep
-blazedemo-performance-tests/results/*-results.jtl
 
 .env
 .env.*
