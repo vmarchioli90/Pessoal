@@ -11,7 +11,7 @@ if not exist "%ROOT_DIR%\results" mkdir "%ROOT_DIR%\results"
 if not exist "%ROOT_DIR%\reports" mkdir "%ROOT_DIR%\reports"
 
 if "%WARMUP_THREADS%"=="" set "WARMUP_THREADS=20"
-if "%SPIKE_THREADS%"=="" set "SPIKE_THREADS=100"
+if "%SPIKE_THREADS%"=="" set "SPIKE_THREADS=150"
 if "%COOLDOWN_THREADS%"=="" set "COOLDOWN_THREADS=20"
 if "%WARMUP_DURATION%"=="" set "WARMUP_DURATION=60"
 if "%SPIKE_RAMP_UP%"=="" set "SPIKE_RAMP_UP=15"
@@ -22,10 +22,10 @@ if "%SPIKE_DELAY%"=="" set "SPIKE_DELAY=60"
 if "%PEAK_DELAY%"=="" set "PEAK_DELAY=75"
 if "%COOLDOWN_DELAY%"=="" set "COOLDOWN_DELAY=135"
 if "%WARMUP_THROUGHPUT%"=="" set "WARMUP_THROUGHPUT=3000"
-if "%PEAK_THROUGHPUT%"=="" set "PEAK_THROUGHPUT=15000"
+if "%PEAK_THROUGHPUT%"=="" set "PEAK_THROUGHPUT=16200"
 if "%COOLDOWN_THROUGHPUT%"=="" set "COOLDOWN_THROUGHPUT=3000"
 
-jmeter -n ^
+call jmeter -n ^
   -t "%ROOT_DIR%\jmeter\blazedemo-spike-test.jmx" ^
   -l "%RESULT_FILE%" ^
   -e -o "%REPORT_DIR%" ^
@@ -44,6 +44,11 @@ jmeter -n ^
   -JpeakThroughput=%PEAK_THROUGHPUT% ^
   -JcooldownThroughput=%COOLDOWN_THROUGHPUT% ^
   -JpassengerFile="%ROOT_DIR%\data\passengers.csv"
+
+if errorlevel 1 exit /b %errorlevel%
+
+node "%ROOT_DIR%\scripts\evaluate-performance.js" spike "%RESULT_FILE%" --output="%ROOT_DIR%\results\spike-test-summary.md"
+if errorlevel 1 exit /b %errorlevel%
 
 echo JTL: %RESULT_FILE%
 echo HTML report: %REPORT_DIR%\index.html

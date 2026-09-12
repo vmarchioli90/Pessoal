@@ -1,249 +1,175 @@
-# BlazeDemo Performance Tests
+# Testes de performance - BlazeDemo
 
-Projeto de teste tecnico de performance usando Apache JMeter para validar o fluxo de compra de passagem aerea no BlazeDemo.
+Automação em Apache JMeter para validar o fluxo completo de compra de passagem aérea no [BlazeDemo](https://www.blazedemo.com/).
 
-URL alvo:
+## Resultado atual
 
-```text
-https://www.blazedemo.com
+| Cenário | Throughput avaliado | P90 | Erros | Resultado |
+| --- | ---: | ---: | ---: | --- |
+| Carga | 268,58 req/s | 460 ms | 0,00% | **Aprovado** |
+| Pico | 264,42 req/s | 468 ms | 0,00% | **Aprovado** |
+
+Critério de aceite: **pelo menos 250 requisições por segundo**, **P90 abaixo de 2.000 ms** e fluxo concluído sem erro.
+
+Os números acima vêm das execuções reais de 11/09/2026. Consulte os [resumos em Markdown](results/) e os dashboards HTML de [carga](reports/load-test-report/index.html) e [pico](reports/spike-test-report/index.html).
+
+## Cenário automatizado
+
+Cada iteração executa e valida a jornada:
+
+1. `GET /` - acessa a página inicial.
+2. `POST /reserve.php` - pesquisa voos de Paris para Buenos Aires.
+3. `POST /purchase.php` - seleciona um voo retornado pela pesquisa.
+4. `POST /confirmation.php` - envia os dados do passageiro.
+5. Confirma a mensagem `Thank you for your purchase today!`.
+
+O plano correlaciona dinamicamente os campos `flight`, `price` e `airline`. Os dados do passageiro são lidos de [`data/passengers.csv`](data/passengers.csv).
+
+## Estratégia de carga
+
+### Teste de carga
+
+- 150 usuários virtuais.
+- Ramp-up de 30 segundos.
+- Duração total de 5 minutos.
+- Alvo de 16.200 samples/min, equivalente a 270 req/s.
+- Margem de 8% sobre o aceite para reduzir oscilações abaixo de 250 req/s.
+- Avaliação somente da janela estável após o ramp-up.
+
+### Teste de pico
+
+- Aquecimento com carga reduzida.
+- Subida rápida para 150 usuários.
+- Sustentação do pico por 60 segundos com alvo de 270 req/s.
+- Retorno controlado à carga reduzida.
+- Avaliação somente do grupo `03 Peak Sustain`.
+
+A média da execução inteira do teste de pico não representa o critério, pois inclui aquecimento e recuperação. O gate considera exclusivamente a janela de sustentação.
+
+## Pré-requisitos
+
+- Java 17 ou superior.
+- Apache JMeter 5.6.3 ou compatível.
+- Node.js 18 ou superior, usado para avaliar o arquivo JTL.
+- Comando `jmeter` disponível no `PATH`.
+
+Confira o ambiente:
+
+```bash
+java -version
+jmeter --version
+node --version
 ```
 
-## Ferramenta utilizada
+> Execute testes de carga somente em ambientes para os quais você tenha autorização.
 
-- Apache JMeter
-- Java
-- Scripts Shell para Linux/Mac
-- Scripts Batch para Windows
+## Como executar
 
-## Cenario testado
+Entre na pasta do projeto:
 
-Fluxo de compra de passagem aerea com sucesso:
+```bash
+cd blazedemo-performance-tests
+```
 
-1. Acessar a home: `GET /`
-2. Pesquisar passagem: `POST /reserve.php`
-3. Escolher um voo valido retornado pela reserva: `POST /purchase.php`
-4. Finalizar compra: `POST /confirmation.php`
-5. Validar sucesso com o texto `Thank you for your purchase today!`
+### Linux ou macOS
 
-O plano usa correlacao para capturar `flight`, `price` e `airline` da tela de reserva antes de enviar a escolha do voo.
+```bash
+chmod +x scripts/*.sh
+./scripts/run-load-test.sh
+./scripts/run-spike-test.sh
+```
 
-## Criterio de aceitacao
+### Windows
 
-A aplicacao deve suportar:
+```bat
+scripts\run-load-test.bat
+scripts\run-spike-test.bat
+```
 
-- Throughput maior ou igual a 250 requisicoes por segundo.
-- Percentil 90 menor que 2000 ms.
-- Baixa taxa de erro, preferencialmente 0%.
+Ao final, cada script:
 
-No JMeter, o throughput alvo foi configurado como `15000` samples por minuto, equivalente a `250` requisicoes por segundo.
+1. gera o resultado bruto `.jtl`;
+2. cria o dashboard HTML do JMeter;
+3. calcula throughput, P90 e erros na janela correta;
+4. atualiza o resumo Markdown;
+5. retorna código diferente de zero se o critério não for atendido.
+
+## Configuração opcional
+
+As propriedades podem ser sobrescritas por variáveis de ambiente.
+
+Exemplo no Linux/macOS:
+
+```bash
+THREADS=180 RAMP_UP=30 DURATION=600 THROUGHPUT=16800 ./scripts/run-load-test.sh
+```
+
+Exemplo no Windows:
+
+```bat
+set THREADS=180
+set RAMP_UP=30
+set DURATION=600
+set THROUGHPUT=16800
+scripts\run-load-test.bat
+```
+
+Principais valores do teste de pico:
+
+| Variável | Padrão | Finalidade |
+| --- | ---: | --- |
+| `WARMUP_THREADS` | 20 | Usuários no aquecimento |
+| `SPIKE_THREADS` | 150 | Usuários na subida e sustentação |
+| `PEAK_DURATION` | 60 | Duração da janela de pico, em segundos |
+| `PEAK_THROUGHPUT` | 16200 | Meta do pico em samples/min |
+| `COOLDOWN_THREADS` | 20 | Usuários na recuperação |
+
+## Evidências versionadas
+
+```text
+results/
+├── load-test-results.jtl
+├── load-test-summary.md
+├── spike-test-results.jtl
+└── spike-test-summary.md
+
+reports/
+├── load-test-report/index.html
+└── spike-test-report/index.html
+```
+
+Os relatórios e arquivos JTL fazem parte do repositório para permitir auditoria dos resultados apresentados.
 
 ## Estrutura do projeto
 
 ```text
 blazedemo-performance-tests/
-├── jmeter/
-│   ├── blazedemo-load-test.jmx
-│   └── blazedemo-spike-test.jmx
-├── data/
-│   └── passengers.csv
-├── results/
-│   ├── load-test-summary.md
-│   └── spike-test-summary.md
-├── reports/
-│   └── .gitkeep
-├── scripts/
-│   ├── run-load-test.sh
-│   ├── run-spike-test.sh
-│   ├── run-load-test.bat
-│   └── run-spike-test.bat
-├── README.md
-└── .gitignore
+├── data/                 # Massa de dados
+├── jmeter/               # Planos de carga e pico
+├── reports/              # Dashboards HTML versionados
+├── results/              # JTL e resumos versionados
+├── scripts/              # Execução e gate de aceite
+└── README.md
 ```
 
-## Pre-requisitos
+## Gitflow adotado
 
-- Java instalado.
-- Apache JMeter instalado.
-- Comando `jmeter` disponivel no `PATH` (inclua `%JMETER_HOME%\\bin` ou `$JMETER_HOME/bin` no `PATH`, se utilizar essa variavel).
+- `main`: versão estável e entregue.
+- `develop`: integração das alterações.
+- `feature/performance-acceptance`: ajuste dos planos e gate de aceite.
+- `feature/version-performance-reports`: versionamento das evidências.
+- `docs/performance-readme`: documentação.
 
-Valide a instalacao:
+As branches de trabalho são integradas em `develop`; após a validação, `develop` é promovida para `main`.
 
-```bash
-java -version
-jmeter --version
-```
+## Decisão do aceite
 
-## Teste de carga
-
-Arquivo:
+O script [`evaluate-performance.js`](scripts/evaluate-performance.js) avalia apenas os quatro samplers HTTP do fluxo. O teste é aprovado somente quando as três condições forem verdadeiras ao mesmo tempo:
 
 ```text
-jmeter/blazedemo-load-test.jmx
+throughput >= 250 req/s
+P90 < 2000 ms
+erros = 0
 ```
 
-Objetivo:
-
-- Sustentar 250 requisicoes por segundo.
-- Usar ramp-up progressivo.
-- Executar por 5 minutos por padrao.
-
-Configuracoes principais por propriedades:
-
-- `threads`: quantidade de threads virtuais. Padrao: `100`
-- `rampUp`: tempo de subida em segundos. Padrao: `120`
-- `duration`: duracao em segundos. Padrao: `300`
-- `throughput`: vazao em samples por minuto. Padrao: `15000`
-
-Linux/Mac:
-
-```bash
-chmod +x scripts/run-load-test.sh
-./scripts/run-load-test.sh
-```
-
-Windows:
-
-```bat
-scripts\run-load-test.bat
-```
-
-Exemplo sobrescrevendo parametros no Linux/Mac:
-
-```bash
-THREADS=150 RAMP_UP=180 DURATION=600 THROUGHPUT=15000 ./scripts/run-load-test.sh
-```
-
-Exemplo sobrescrevendo parametros no Windows:
-
-```bat
-set THREADS=150
-set RAMP_UP=180
-set DURATION=600
-set THROUGHPUT=15000
-scripts\run-load-test.bat
-```
-
-## Teste de pico
-
-Arquivo:
-
-```text
-jmeter/blazedemo-spike-test.jmx
-```
-
-Objetivo:
-
-- Simular aquecimento com baixa carga.
-- Subir rapidamente ate o pico.
-- Sustentar curto periodo com 250 requisicoes por segundo.
-- Reduzir a carga apos o pico.
-
-Configuracoes principais por propriedades:
-
-- `warmupThreads`: threads no aquecimento. Padrao: `20`
-- `spikeThreads`: threads no pico. Padrao: `100`
-- `cooldownThreads`: threads na reducao. Padrao: `20`
-- `warmupDuration`: duracao do aquecimento. Padrao: `60`
-- `spikeRampUp`: subida rapida em segundos. Padrao: `15`
-- `peakDuration`: sustentacao no pico. Padrao: `60`
-- `cooldownDuration`: duracao da reducao. Padrao: `60`
-- `warmupThroughput`: throughput do aquecimento em samples/min. Padrao: `3000`
-- `peakThroughput`: throughput de pico em samples/min. Padrao: `15000`
-- `cooldownThroughput`: throughput da reducao em samples/min. Padrao: `3000`
-
-Linux/Mac:
-
-```bash
-chmod +x scripts/run-spike-test.sh
-./scripts/run-spike-test.sh
-```
-
-Windows:
-
-```bat
-scripts\run-spike-test.bat
-```
-
-## Relatorios
-
-Os scripts executam o JMeter em modo non-GUI, geram o `.jtl` em `results/` e o relatorio HTML em `reports/`.
-
-Teste de carga:
-
-```text
-results/load-test-results.jtl
-reports/load-test-report/index.html
-```
-
-Teste de pico:
-
-```text
-results/spike-test-results.jtl
-reports/spike-test-report/index.html
-```
-
-## Como interpretar os resultados
-
-No relatorio HTML do JMeter, observe principalmente:
-
-- Throughput.
-- Percentil 90.
-- Tempo medio.
-- Erros.
-- Total de amostras.
-
-Para concluir que o criterio foi atendido, use a aba de estatisticas do relatorio HTML e valide:
-
-- O throughput geral ficou maior ou igual a 250 req/s.
-- O percentil 90 ficou abaixo de 2000 ms.
-- A taxa de erro ficou baixa, idealmente 0%.
-- A assertion da confirmacao de compra nao apresentou falhas.
-
-## Explicacao importante sobre req/s
-
-O criterio fala em 250 requisicoes por segundo.
-
-Como o fluxo de compra possui multiplas requisicoes por iteracao, a quantidade de compras por segundo nao e igual a quantidade de requisicoes por segundo. Uma iteracao completa executa chamadas para home, reserva, escolha do voo e confirmacao da compra.
-
-Por isso, a avaliacao deve ser feita pelo throughput de requisicoes/samples apresentado pelo JMeter, nao pela quantidade de compras concluidas por segundo.
-
-## Relatorio de execucao
-
-Os resultados da execucao real ficam documentados em:
-
-- `results/load-test-summary.md`
-- `results/spike-test-summary.md`
-
-Os resumos registram:
-
-- Data da execucao.
-- Maquina utilizada.
-- Sistema operacional.
-- Versao do Java.
-- Versao do JMeter.
-- Duracao.
-- Throughput obtido.
-- Percentil 90 obtido.
-- Taxa de erro.
-- Resultado aprovado ou reprovado.
-- Evidencias.
-- Motivo da conclusao.
-
-Os valores publicados nesses arquivos vieram de uma execucao real. Resultados futuros devem substituir os dados somente depois de uma nova execucao completa e verificavel.
-
-## Conclusao
-
-O projeto executa testes de carga e pico contra a aplicacao real BlazeDemo. Na execucao registrada em `results/`, o P90 e a taxa de erro atenderam ao esperado, mas a meta de 250 req/s nao foi alcancada. Por isso, ambos os resultados foram classificados como reprovados de forma conservadora.
-
-Os dashboards HTML e arquivos JTL sao gerados localmente e nao sao versionados. Os resumos Markdown preservam as metricas e a conclusao; uma nova avaliacao deve ser baseada em uma nova execucao, sem reutilizar resultados antigos.
-
-## Consideracoes tecnicas
-
-- Os planos usam HTTP Request Defaults com protocolo `https` e servidor `www.blazedemo.com`.
-- Os planos usam HTTP Cookie Manager e HTTP Cache Manager.
-- A confirmacao da compra possui Response Assertion para validar o texto de sucesso.
-- Os planos foram preparados para execucao em modo non-GUI.
-- Listeners pesados, como View Results Tree, nao foram adicionados aos `.jmx`.
-- Os dados de passageiro ficam em `data/passengers.csv`.
-- O throughput e controlado com Constant Throughput Timer.
-- A API/site alvo e publico, portanto resultados podem variar por rede, maquina, horario e disponibilidade da aplicacao.
+Essa regra evita aprovar a execução usando média de tempo de resposta, throughput diluído por ramp-up ou samples sintéticos do Transaction Controller.

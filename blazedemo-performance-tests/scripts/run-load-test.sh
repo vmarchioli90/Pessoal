@@ -13,11 +13,15 @@ jmeter -n \
   -t "$ROOT_DIR/jmeter/blazedemo-load-test.jmx" \
   -l "$RESULT_FILE" \
   -e -o "$REPORT_DIR" \
-  -Jthreads="${THREADS:-100}" \
-  -JrampUp="${RAMP_UP:-120}" \
+  -Jthreads="${THREADS:-150}" \
+  -JrampUp="${RAMP_UP:-30}" \
   -Jduration="${DURATION:-300}" \
-  -Jthroughput="${THROUGHPUT:-15000}" \
+  -Jthroughput="${THROUGHPUT:-16200}" \
   -JpassengerFile="$ROOT_DIR/data/passengers.csv"
+
+node "$ROOT_DIR/scripts/evaluate-performance.js" load "$RESULT_FILE" \
+  "--ramp-up-seconds=${RAMP_UP:-30}" \
+  "--output=$ROOT_DIR/results/load-test-summary.md"
 
 echo "JTL: $RESULT_FILE"
 echo "HTML report: $REPORT_DIR/index.html"

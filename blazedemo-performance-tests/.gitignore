@@ -1,12 +1,5 @@
-# JMeter generated artifacts
-*.jtl
+# Local-only artifacts
 *.log
-
-reports/**
-!reports/.gitkeep
-
-results/*-results.jtl
-results/*.csv
 
 apache-jmeter-*/
 
