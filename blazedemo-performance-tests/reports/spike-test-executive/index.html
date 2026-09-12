@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Relatório Executivo - Teste de Pico</title>
+  <style>
+    :root { --navy:#10233f; --blue:#2563eb; --cyan:#06b6d4; --green:#15803d; --green-bg:#ecfdf3; --red:#b42318; --red-bg:#fff1f0; --ink:#162033; --muted:#667085; --line:#dfe5ee; --bg:#f4f7fb; --panel:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter,"Segoe UI",Arial,sans-serif; color:var(--ink); background:var(--bg); line-height:1.55; }
+    header { color:#fff; background:linear-gradient(125deg,var(--navy),#164e63); padding:48px 24px 84px; }
+    .wrap { width:min(1160px,calc(100% - 32px)); margin:auto; }
+    .eyebrow { font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; opacity:.76; }
+    h1 { margin:8px 0 10px; font-size:clamp(32px,5vw,54px); line-height:1.05; }
+    header p { margin:0; max-width:760px; color:#d7e5f5; }
+    .decision { display:inline-flex; margin-top:24px; padding:9px 14px; border-radius:999px; font-weight:800; background:#dcfce7; color:#166534; }
+    main { margin-top:-48px; padding-bottom:56px; }
+    .grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+    .card,.panel { background:var(--panel); border:1px solid var(--line); border-radius:14px; box-shadow:0 12px 35px rgba(16,35,63,.08); }
+    .card { padding:20px; }
+    .card small { color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.06em; }
+    .card strong { display:block; margin:10px 0 4px; font-size:29px; color:var(--navy); }
+    .ok { color:var(--green); } .fail { color:var(--red); }
+    .panel { margin-top:18px; padding:24px; }
+    h2 { margin:0 0 16px; color:var(--navy); font-size:22px; }
+    h3 { margin:22px 0 8px; color:var(--navy); font-size:16px; }
+    .meta { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .meta div { padding:14px; border-radius:10px; background:#f8fafc; border:1px solid var(--line); }
+    .meta span { display:block; color:var(--muted); font-size:12px; text-transform:uppercase; font-weight:800; }
+    .meta b { display:block; margin-top:5px; font-size:14px; overflow-wrap:anywhere; }
+    table { width:100%; border-collapse:collapse; font-size:14px; }
+    th,td { padding:12px 10px; border-bottom:1px solid var(--line); text-align:right; white-space:nowrap; }
+    th:first-child,td:first-child { text-align:left; }
+    th { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.05em; background:#f8fafc; }
+    .table-scroll { overflow-x:auto; }
+    .criteria { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+    .criterion { padding:16px; border-radius:10px; border:1px solid var(--line); }
+    .criterion b { display:block; font-size:20px; margin:5px 0; }
+    .badge { font-size:12px; font-weight:800; text-transform:uppercase; }
+    .chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .chart { border:1px solid var(--line); border-radius:10px; padding:12px; }
+    svg { width:100%; height:auto; }
+    .threshold { stroke:#dc2626; stroke-width:2; stroke-dasharray:7 7; opacity:.7; }
+    .axis { stroke:#94a3b8; stroke-width:1; }
+    .chart-label { fill:#667085; font-size:13px; }
+    ul { margin:8px 0 0; padding-left:20px; }
+    code { font-family:"Cascadia Code",Consolas,monospace; font-size:12px; }
+    footer { color:var(--muted); text-align:center; padding:0 20px 30px; font-size:12px; }
+    @media(max-width:850px){ .grid,.criteria,.meta,.chart-grid{grid-template-columns:1fr 1fr;} }
+    @media(max-width:560px){ .grid,.criteria,.meta,.chart-grid{grid-template-columns:1fr;} header{padding-top:34px;} }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="eyebrow">Quality Engineering · Performance</div>
+      <h1>Teste de Pico</h1>
+      <p>Validação do fluxo completo de compra de passagem no BlazeDemo, com decisão baseada em throughput HTTP, percentil 90 e integridade funcional.</p>
+      <div class="decision">✓ APROVADO</div>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="grid">
+      <article class="card"><small>Throughput</small><strong>264,42</strong><span>req/s · meta ≥ 250</span></article>
+      <article class="card"><small>Percentil 90</small><strong>468</strong><span>ms · limite &lt; 2.000</span></article>
+      <article class="card"><small>Taxa de erro</small><strong>0,00</strong><span>% · 0 ocorrência(s)</span></article>
+      <article class="card"><small>Amostras</small><strong>15.986</strong><span>60,5 s avaliados</span></article>
+    </section>
+    <section class="panel">
+      <h2>Identificação e rastreabilidade</h2>
+      <div class="meta">
+        <div><span>ID da execução</span><b><code>SPIKE-20260912T005042Z</code></b></div>
+        <div><span>Início da janela</span><b>11/09/2026, 21:50:42</b></div>
+        <div><span>Sistema sob teste</span><b>www.blazedemo.com</b></div>
+        <div><span>Janela avaliada</span><b>fase 03 de sustentação do pico</b></div>
+        <div><span>Perfil de carga</span><b>150 usuários no pico; alvo de 270 req/s; sustentação por 60 segundos</b></div>
+        <div><span>SHA-256 do JTL</span><b><code>cd98c1c469c9ce2d5fde5989bb0d12e28363b69df07977cdf33161cd0a80564b</code></b></div>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>Decisão por critério</h2>
+      <div class="criteria">
+        <article class="criterion"><span class="badge ok">Atendido</span><b>264,42 req/s</b><span>Throughput mínimo: 250 req/s</span></article>
+        <article class="criterion"><span class="badge ok">Atendido</span><b>468 ms</b><span>Limite: &lt; 2.000 ms</span></article>
+        <article class="criterion"><span class="badge ok">Atendido</span><b>0 erros</b><span>Fluxo deve concluir com sucesso</span></article>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>Comportamento durante a janela</h2>
+      <div class="chart-grid">
+        <div class="chart"><h3>Throughput em intervalos de 5 s</h3>
+    <svg viewBox="0 0 900 230" role="img" aria-label="Série temporal de throughput">
+      <line x1="34" y1="55.13043478260869" x2="866" y2="55.13043478260869" class="threshold" />
+      <text x="866" y="47.13043478260869" text-anchor="end" class="chart-label">limite 250 req/s</text>
+      <polyline points="34,51.524173913043484 109.63636363636364,44.311652173913046 185.27272727272728,44.086260869565194 260.9090909090909,44.311652173913046 336.54545454545456,44.311652173913046 412.1818181818182,44.19895652173915 487.81818181818176,44.086260869565194 563.4545454545455,59.75095652173914 639.0909090909091,44.76243478260872 714.7272727272727,44.19895652173915 790.3636363636364,43.8608695652174 866,43.74817391304347" fill="none" stroke="#2563eb" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" />
+      <line x1="34" y1="196" x2="866" y2="196" class="axis" />
+      <text x="34" y="222" class="chart-label">0 s</text>
+      <text x="866" y="222" text-anchor="end" class="chart-label">55 s</text>
+    </svg></div>
+        <div class="chart"><h3>P90 em intervalos de 5 s</h3>
+    <svg viewBox="0 0 900 230" role="img" aria-label="Série temporal de p90">
+      <line x1="34" y1="55.13043478260869" x2="866" y2="55.13043478260869" class="threshold" />
+      <text x="866" y="47.13043478260869" text-anchor="end" class="chart-label">limite 2000 ms</text>
+      <polyline points="34,161.06434782608696 109.63636363636364,166.55826086956523 185.27272727272728,163.6704347826087 260.9090909090909,163.6704347826087 336.54545454545456,165.1495652173913 412.1818181818182,166.6991304347826 487.81818181818176,164.79739130434783 563.4545454545455,144.58260869565217 639.0909090909091,164.30434782608694 714.7272727272727,163.8817391304348 790.3636363636364,165.50173913043477 866,165.64260869565217" fill="none" stroke="#06b6d4" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" />
+      <line x1="34" y1="196" x2="866" y2="196" class="axis" />
+      <text x="34" y="222" class="chart-label">0 s</text>
+      <text x="866" y="222" text-anchor="end" class="chart-label">55 s</text>
+    </svg></div>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>Distribuição de latência</h2>
+      <div class="table-scroll"><table><thead><tr><th>Métrica</th><th>Média</th><th>P50</th><th>P90</th><th>P95</th><th>P99</th><th>Máximo</th></tr></thead>
+      <tbody><tr><td>Tempo de resposta</td><td>348 ms</td><td>314 ms</td><td>468 ms</td><td>526 ms</td><td>714 ms</td><td>3.741 ms</td></tr></tbody></table></div>
+    </section>
+    <section class="panel">
+      <h2>Detalhamento por endpoint</h2>
+      <div class="table-scroll"><table><thead><tr><th>Endpoint</th><th>Amostras</th><th>req/s</th><th>Média</th><th>P90</th><th>P95</th><th>P99</th><th>Erros</th></tr></thead><tbody>
+        <tr>
+          <td>GET Home</td>
+          <td>4.043</td>
+          <td>66,88</td>
+          <td>348 ms</td>
+          <td>476 ms</td>
+          <td>538 ms</td>
+          <td>727 ms</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td>POST Search Flights</td>
+          <td>4.032</td>
+          <td>66,69</td>
+          <td>348 ms</td>
+          <td>462 ms</td>
+          <td>523 ms</td>
+          <td>699 ms</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td>POST Choose Flight</td>
+          <td>3.988</td>
+          <td>65,97</td>
+          <td>348 ms</td>
+          <td>465 ms</td>
+          <td>522 ms</td>
+          <td>746 ms</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td>POST Confirm Purchase</td>
+          <td>3.923</td>
+          <td>64,89</td>
+          <td>347 ms</td>
+          <td>467 ms</td>
+          <td>525 ms</td>
+          <td>687 ms</td>
+          <td>0</td>
+        </tr></tbody></table></div>
+    </section>
+    <section class="panel">
+      <h2>Leitura técnica</h2>
+      <h3>Metodologia</h3>
+      <ul><li>Somente os quatro samplers HTTP do fluxo foram contabilizados.</li><li>O Transaction Controller foi excluído para evitar inflação artificial da vazão.</li><li>Somente a sustentação do pico foi usada na decisão.</li><li>O P90 usa o método nearest-rank.</li></ul>
+      <h3>Riscos e limitações</h3>
+      <ul><li>Ambiente público e latência de rede estão incluídos no resultado.</li><li>Foi utilizado um único gerador, sem telemetria do servidor.</li><li>A aprovação é válida para esta execução e este perfil; não representa capacidade máxima.</li></ul>
+      <h3>Conclusão</h3>
+      <p>A execução foi <strong>aprovada</strong>: 264,42 req/s, P90 de 468 ms e 0 erro(s). Os critérios foram satisfeitos simultaneamente na janela observada.</p>
+    </section>
+  </main>
+  <footer>Relatório gerado automaticamente a partir do JTL · 11/09/2026, 22:06:49</footer>
+</body>
+</html>

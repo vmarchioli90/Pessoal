@@ -27,7 +27,7 @@ call jmeter -n ^
 
 if errorlevel 1 exit /b %errorlevel%
 
-node "%ROOT_DIR%\scripts\evaluate-performance.js" load "%RESULT_FILE%" --ramp-up-seconds=%RAMP_UP% --output="%ROOT_DIR%\results\load-test-summary.md"
+node "%ROOT_DIR%\scripts\evaluate-performance.js" load "%RESULT_FILE%" --ramp-up-seconds=%RAMP_UP% --output="%ROOT_DIR%\results\load-test-summary.md" --html="%ROOT_DIR%\reports\load-test-executive\index.html"
 if errorlevel 1 exit /b %errorlevel%
 
 echo JTL: %RESULT_FILE%

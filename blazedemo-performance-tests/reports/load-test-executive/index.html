@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Relatório Executivo - Teste de Carga</title>
+  <style>
+    :root { --navy:#10233f; --blue:#2563eb; --cyan:#06b6d4; --green:#15803d; --green-bg:#ecfdf3; --red:#b42318; --red-bg:#fff1f0; --ink:#162033; --muted:#667085; --line:#dfe5ee; --bg:#f4f7fb; --panel:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter,"Segoe UI",Arial,sans-serif; color:var(--ink); background:var(--bg); line-height:1.55; }
+    header { color:#fff; background:linear-gradient(125deg,var(--navy),#164e63); padding:48px 24px 84px; }
+    .wrap { width:min(1160px,calc(100% - 32px)); margin:auto; }
+    .eyebrow { font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; opacity:.76; }
+    h1 { margin:8px 0 10px; font-size:clamp(32px,5vw,54px); line-height:1.05; }
+    header p { margin:0; max-width:760px; color:#d7e5f5; }
+    .decision { display:inline-flex; margin-top:24px; padding:9px 14px; border-radius:999px; font-weight:800; background:#dcfce7; color:#166534; }
+    main { margin-top:-48px; padding-bottom:56px; }
+    .grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+    .card,.panel { background:var(--panel); border:1px solid var(--line); border-radius:14px; box-shadow:0 12px 35px rgba(16,35,63,.08); }
+    .card { padding:20px; }
+    .card small { color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.06em; }
+    .card strong { display:block; margin:10px 0 4px; font-size:29px; color:var(--navy); }
+    .ok { color:var(--green); } .fail { color:var(--red); }
+    .panel { margin-top:18px; padding:24px; }
+    h2 { margin:0 0 16px; color:var(--navy); font-size:22px; }
+    h3 { margin:22px 0 8px; color:var(--navy); font-size:16px; }
+    .meta { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .meta div { padding:14px; border-radius:10px; background:#f8fafc; border:1px solid var(--line); }
+    .meta span { display:block; color:var(--muted); font-size:12px; text-transform:uppercase; font-weight:800; }
+    .meta b { display:block; margin-top:5px; font-size:14px; overflow-wrap:anywhere; }
+    table { width:100%; border-collapse:collapse; font-size:14px; }
+    th,td { padding:12px 10px; border-bottom:1px solid var(--line); text-align:right; white-space:nowrap; }
+    th:first-child,td:first-child { text-align:left; }
+    th { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.05em; background:#f8fafc; }
+    .table-scroll { overflow-x:auto; }
+    .criteria { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+    .criterion { padding:16px; border-radius:10px; border:1px solid var(--line); }
+    .criterion b { display:block; font-size:20px; margin:5px 0; }
+    .badge { font-size:12px; font-weight:800; text-transform:uppercase; }
+    .chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .chart { border:1px solid var(--line); border-radius:10px; padding:12px; }
+    svg { width:100%; height:auto; }
+    .threshold { stroke:#dc2626; stroke-width:2; stroke-dasharray:7 7; opacity:.7; }
+    .axis { stroke:#94a3b8; stroke-width:1; }
+    .chart-label { fill:#667085; font-size:13px; }
+    ul { margin:8px 0 0; padding-left:20px; }
+    code { font-family:"Cascadia Code",Consolas,monospace; font-size:12px; }
+    footer { color:var(--muted); text-align:center; padding:0 20px 30px; font-size:12px; }
+    @media(max-width:850px){ .grid,.criteria,.meta,.chart-grid{grid-template-columns:1fr 1fr;} }
+    @media(max-width:560px){ .grid,.criteria,.meta,.chart-grid{grid-template-columns:1fr;} header{padding-top:34px;} }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="eyebrow">Quality Engineering · Performance</div>
+      <h1>Teste de Carga</h1>
+      <p>Validação do fluxo completo de compra de passagem no BlazeDemo, com decisão baseada em throughput HTTP, percentil 90 e integridade funcional.</p>
+      <div class="decision">✓ APROVADO</div>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="grid">
+      <article class="card"><small>Throughput</small><strong>268,58</strong><span>req/s · meta ≥ 250</span></article>
+      <article class="card"><small>Percentil 90</small><strong>460</strong><span>ms · limite &lt; 2.000</span></article>
+      <article class="card"><small>Taxa de erro</small><strong>0,00</strong><span>% · 0 ocorrência(s)</span></article>
+      <article class="card"><small>Amostras</small><strong>72.545</strong><span>270,1 s avaliados</span></article>
+    </section>
+    <section class="panel">
+      <h2>Identificação e rastreabilidade</h2>
+      <div class="meta">
+        <div><span>ID da execução</span><b><code>LOAD-20260912T004423Z</code></b></div>
+        <div><span>Início da janela</span><b>11/09/2026, 21:44:23</b></div>
+        <div><span>Sistema sob teste</span><b>www.blazedemo.com</b></div>
+        <div><span>Janela avaliada</span><b>fase estável após 30 segundos de ramp-up</b></div>
+        <div><span>Perfil de carga</span><b>150 usuários; alvo de 270 req/s; execução total de 5 minutos</b></div>
+        <div><span>SHA-256 do JTL</span><b><code>2da32e2becd38662a1e0d6938c7962a8ea2e901d641631b27cd17c6791179a09</code></b></div>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>Decisão por critério</h2>
+      <div class="criteria">
+        <article class="criterion"><span class="badge ok">Atendido</span><b>268,58 req/s</b><span>Throughput mínimo: 250 req/s</span></article>
+        <article class="criterion"><span class="badge ok">Atendido</span><b>460 ms</b><span>Limite: &lt; 2.000 ms</span></article>
+        <article class="criterion"><span class="badge ok">Atendido</span><b>0 erros</b><span>Fluxo deve concluir com sucesso</span></article>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>Comportamento durante a janela</h2>
+      <div class="chart-grid">
+        <div class="chart"><h3>Throughput em intervalos de 5 s</h3>
+    <svg viewBox="0 0 900 230" role="img" aria-label="Série temporal de throughput">
+      <line x1="34" y1="55.13043478260869" x2="866" y2="55.13043478260869" class="threshold" />
+      <text x="866" y="47.13043478260869" text-anchor="end" class="chart-label">limite 250 req/s</text>
+      <polyline points="34,43.8608695652174 49.698113207547166,44.311652173913046 65.39622641509433,44.42434782608697 81.09433962264151,44.19895652173915 96.79245283018868,44.086260869565194 112.49056603773586,44.19895652173915 128.18867924528303,44.53704347826087 143.8867924528302,44.311652173913046 159.58490566037736,44.086260869565194 175.2830188679245,44.311652173913046 190.98113207547172,44.086260869565194 206.67924528301887,44.19895652173915 222.37735849056605,44.086260869565194 238.0754716981132,44.086260869565194 253.77358490566039,43.8608695652174 269.47169811320754,44.19895652173915 285.1698113207547,43.9735652173913 300.8679245283019,45.43860869565219 316.566037735849,43.8608695652174 332.2641509433962,43.9735652173913 347.96226415094344,44.086260869565194 363.66037735849056,44.086260869565194 379.35849056603774,44.64973913043477 395.0566037735849,43.9735652173913 410.7547169811321,43.8608695652174 426.45283018867923,44.086260869565194 442.1509433962264,43.9735652173913 457.8490566037736,44.42434782608697 473.54716981132077,44.87513043478262 489.2452830188679,46.22747826086956 504.9433962264151,44.53704347826087 520.6415094339623,44.98782608695652 536.3396226415094,44.76243478260872 552.0377358490566,43.9735652173913 567.7358490566038,44.42434782608697 583.4339622641509,44.53704347826087 599.132075471698,44.76243478260872 614.8301886792452,44.64973913043477 630.5283018867924,44.086260869565194 646.2264150943396,44.42434782608697 661.9245283018869,43.8608695652174 677.6226415094341,44.086260869565194 693.3207547169811,44.87513043478262 709.0188679245283,44.19895652173915 724.7169811320755,45.21321739130434 740.4150943396227,48.59408695652172 756.1132075471698,45.43860869565219 771.811320754717,44.311652173913046 787.5094339622642,43.9735652173913 803.2075471698113,44.311652173913046 818.9056603773585,45.21321739130434 834.6037735849056,44.42434782608697 850.3018867924528,45.21321739130434 866,51.29878260869566" fill="none" stroke="#2563eb" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" />
+      <line x1="34" y1="196" x2="866" y2="196" class="axis" />
+      <text x="34" y="222" class="chart-label">0 s</text>
+      <text x="866" y="222" text-anchor="end" class="chart-label">265 s</text>
+    </svg></div>
+        <div class="chart"><h3>P90 em intervalos de 5 s</h3>
+    <svg viewBox="0 0 900 230" role="img" aria-label="Série temporal de p90">
+      <line x1="34" y1="55.13043478260869" x2="866" y2="55.13043478260869" class="threshold" />
+      <text x="866" y="47.13043478260869" text-anchor="end" class="chart-label">limite 2000 ms</text>
+      <polyline points="34,166.13565217391306 49.698113207547166,167.12173913043478 65.39622641509433,167.33304347826086 81.09433962264151,165.50173913043477 96.79245283018868,166.7695652173913 112.49056603773586,164.02260869565217 128.18867924528303,165.43130434782609 143.8867924528302,165.1495652173913 159.58490566037736,166.48782608695652 175.2830188679245,165.0086956521739 190.98113207547172,165.50173913043477 206.67924528301887,166.55826086956523 222.37735849056605,167.26260869565218 238.0754716981132,165.50173913043477 253.77358490566039,166.34695652173912 269.47169811320754,163.3886956521739 285.1698113207547,164.93826086956523 300.8679245283019,162.19130434782608 316.566037735849,165.43130434782609 332.2641509433962,165.3608695652174 347.96226415094344,164.02260869565217 363.66037735849056,164.30434782608694 379.35849056603774,157.82434782608695 395.0566037735849,162.1208695652174 410.7547169811321,162.40260869565216 426.45283018867923,162.54347826086956 442.1509433962264,162.40260869565216 457.8490566037736,162.47304347826088 473.54716981132077,161.9095652173913 489.2452830188679,160.85304347826087 504.9433962264151,162.61391304347825 520.6415094339623,162.2617391304348 536.3396226415094,162.75478260869565 552.0377358490566,163.6704347826087 567.7358490566038,163.95217391304348 583.4339622641509,163.8817391304348 599.132075471698,165.78347826086957 614.8301886792452,163.5295652173913 630.5283018867924,162.1208695652174 646.2264150943396,161.41652173913042 661.9245283018869,163.5295652173913 677.6226415094341,167.12173913043478 693.3207547169811,165.71304347826086 709.0188679245283,165.92434782608694 724.7169811320755,160.4304347826087 740.4150943396227,153.59826086956522 756.1132075471698,159.72608695652173 771.811320754717,163.3886956521739 787.5094339622642,164.30434782608694 803.2075471698113,163.03652173913042 818.9056603773585,163.03652173913042 834.6037735849056,164.8678260869565 850.3018867924528,160.92347826086956 866,164.09304347826088" fill="none" stroke="#06b6d4" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" />
+      <line x1="34" y1="196" x2="866" y2="196" class="axis" />
+      <text x="34" y="222" class="chart-label">0 s</text>
+      <text x="866" y="222" text-anchor="end" class="chart-label">265 s</text>
+    </svg></div>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>Distribuição de latência</h2>
+      <div class="table-scroll"><table><thead><tr><th>Métrica</th><th>Média</th><th>P50</th><th>P90</th><th>P95</th><th>P99</th><th>Máximo</th></tr></thead>
+      <tbody><tr><td>Tempo de resposta</td><td>343 ms</td><td>318 ms</td><td>460 ms</td><td>507 ms</td><td>616 ms</td><td>1.266 ms</td></tr></tbody></table></div>
+    </section>
+    <section class="panel">
+      <h2>Detalhamento por endpoint</h2>
+      <div class="table-scroll"><table><thead><tr><th>Endpoint</th><th>Amostras</th><th>req/s</th><th>Média</th><th>P90</th><th>P95</th><th>P99</th><th>Erros</th></tr></thead><tbody>
+        <tr>
+          <td>GET Home</td>
+          <td>18.136</td>
+          <td>67,14</td>
+          <td>336 ms</td>
+          <td>452 ms</td>
+          <td>498 ms</td>
+          <td>603 ms</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td>POST Search Flights</td>
+          <td>18.135</td>
+          <td>67,14</td>
+          <td>344 ms</td>
+          <td>460 ms</td>
+          <td>507 ms</td>
+          <td>616 ms</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td>POST Choose Flight</td>
+          <td>18.138</td>
+          <td>67,15</td>
+          <td>344 ms</td>
+          <td>463 ms</td>
+          <td>508 ms</td>
+          <td>618 ms</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td>POST Confirm Purchase</td>
+          <td>18.136</td>
+          <td>67,14</td>
+          <td>346 ms</td>
+          <td>466 ms</td>
+          <td>514 ms</td>
+          <td>626 ms</td>
+          <td>0</td>
+        </tr></tbody></table></div>
+    </section>
+    <section class="panel">
+      <h2>Leitura técnica</h2>
+      <h3>Metodologia</h3>
+      <ul><li>Somente os quatro samplers HTTP do fluxo foram contabilizados.</li><li>O Transaction Controller foi excluído para evitar inflação artificial da vazão.</li><li>O ramp-up foi removido da janela decisória.</li><li>O P90 usa o método nearest-rank.</li></ul>
+      <h3>Riscos e limitações</h3>
+      <ul><li>Ambiente público e latência de rede estão incluídos no resultado.</li><li>Foi utilizado um único gerador, sem telemetria do servidor.</li><li>A aprovação é válida para esta execução e este perfil; não representa capacidade máxima.</li></ul>
+      <h3>Conclusão</h3>
+      <p>A execução foi <strong>aprovada</strong>: 268,58 req/s, P90 de 460 ms e 0 erro(s). Os critérios foram satisfeitos simultaneamente na janela observada.</p>
+    </section>
+  </main>
+  <footer>Relatório gerado automaticamente a partir do JTL · 11/09/2026, 22:06:49</footer>
+</body>
+</html>
