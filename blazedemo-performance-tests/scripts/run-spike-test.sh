@@ -14,7 +14,7 @@ jmeter -n \
   -l "$RESULT_FILE" \
   -e -o "$REPORT_DIR" \
   -JwarmupThreads="${WARMUP_THREADS:-20}" \
-  -JspikeThreads="${SPIKE_THREADS:-100}" \
+  -JspikeThreads="${SPIKE_THREADS:-150}" \
   -JcooldownThreads="${COOLDOWN_THREADS:-20}" \
   -JwarmupDuration="${WARMUP_DURATION:-60}" \
   -JspikeRampUp="${SPIKE_RAMP_UP:-15}" \
@@ -25,9 +25,12 @@ jmeter -n \
   -JpeakDelay="${PEAK_DELAY:-75}" \
   -JcooldownDelay="${COOLDOWN_DELAY:-135}" \
   -JwarmupThroughput="${WARMUP_THROUGHPUT:-3000}" \
-  -JpeakThroughput="${PEAK_THROUGHPUT:-15000}" \
+  -JpeakThroughput="${PEAK_THROUGHPUT:-16200}" \
   -JcooldownThroughput="${COOLDOWN_THROUGHPUT:-3000}" \
   -JpassengerFile="$ROOT_DIR/data/passengers.csv"
+
+node "$ROOT_DIR/scripts/evaluate-performance.js" spike "$RESULT_FILE" \
+  "--output=$ROOT_DIR/results/spike-test-summary.md"
 
 echo "JTL: $RESULT_FILE"
 echo "HTML report: $REPORT_DIR/index.html"

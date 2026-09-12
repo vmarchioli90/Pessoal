@@ -338,7 +338,7 @@
         <hashTree />
       </hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="02 Fast Ramp to Spike">
-        <stringProp name="ThreadGroup.num_threads">${__P(spikeThreads,100)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(spikeThreads,150)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(spikeRampUp,15)}</stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
@@ -351,7 +351,7 @@
       </ThreadGroup>
       <hashTree>
         <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Spike Ramp Throughput">
-          <stringProp name="throughput">${__P(peakThroughput,15000)}</stringProp>
+          <stringProp name="throughput">${__P(peakThroughput,16200)}</stringProp>
           <intProp name="calcMode">2</intProp>
         </ConstantThroughputTimer>
         <hashTree />
@@ -621,7 +621,7 @@
         <hashTree />
       </hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="03 Peak Sustain - 250 req/s">
-        <stringProp name="ThreadGroup.num_threads">${__P(spikeThreads,100)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(spikeThreads,150)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
@@ -634,7 +634,7 @@
       </ThreadGroup>
       <hashTree>
         <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Peak Throughput - 250 req/s">
-          <stringProp name="throughput">${__P(peakThroughput,15000)}</stringProp>
+          <stringProp name="throughput">${__P(peakThroughput,16200)}</stringProp>
           <intProp name="calcMode">2</intProp>
         </ConstantThroughputTimer>
         <hashTree />
