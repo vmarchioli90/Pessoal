@@ -47,7 +47,7 @@ call jmeter -n ^
 
 if errorlevel 1 exit /b %errorlevel%
 
-node "%ROOT_DIR%\scripts\evaluate-performance.js" spike "%RESULT_FILE%" --output="%ROOT_DIR%\results\spike-test-summary.md"
+node "%ROOT_DIR%\scripts\evaluate-performance.js" spike "%RESULT_FILE%" --output="%ROOT_DIR%\results\spike-test-summary.md" --html="%ROOT_DIR%\reports\spike-test-executive\index.html"
 if errorlevel 1 exit /b %errorlevel%
 
 echo JTL: %RESULT_FILE%

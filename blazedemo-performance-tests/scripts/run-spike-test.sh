@@ -30,7 +30,8 @@ jmeter -n \
   -JpassengerFile="$ROOT_DIR/data/passengers.csv"
 
 node "$ROOT_DIR/scripts/evaluate-performance.js" spike "$RESULT_FILE" \
-  "--output=$ROOT_DIR/results/spike-test-summary.md"
+  "--output=$ROOT_DIR/results/spike-test-summary.md" \
+  "--html=$ROOT_DIR/reports/spike-test-executive/index.html"
 
 echo "JTL: $RESULT_FILE"
 echo "HTML report: $REPORT_DIR/index.html"
