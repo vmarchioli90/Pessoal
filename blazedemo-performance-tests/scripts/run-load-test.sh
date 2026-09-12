@@ -21,7 +21,8 @@ jmeter -n \
 
 node "$ROOT_DIR/scripts/evaluate-performance.js" load "$RESULT_FILE" \
   "--ramp-up-seconds=${RAMP_UP:-30}" \
-  "--output=$ROOT_DIR/results/load-test-summary.md"
+  "--output=$ROOT_DIR/results/load-test-summary.md" \
+  "--html=$ROOT_DIR/reports/load-test-executive/index.html"
 
 echo "JTL: $RESULT_FILE"
 echo "HTML report: $REPORT_DIR/index.html"

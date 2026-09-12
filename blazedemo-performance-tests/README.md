@@ -11,7 +11,7 @@ Automação em Apache JMeter para validar o fluxo completo de compra de passagem
 
 Critério de aceite: **pelo menos 250 requisições por segundo**, **P90 abaixo de 2.000 ms** e fluxo concluído sem erro.
 
-Os números acima vêm das execuções reais de 11/09/2026. Consulte os [resumos em Markdown](results/) e os dashboards HTML de [carga](reports/load-test-report/index.html) e [pico](reports/spike-test-report/index.html).
+Os números acima vêm das execuções reais de 11/09/2026. Consulte os [resumos em Markdown](results/), os relatórios executivos de [carga](reports/load-test-executive/index.html) e [pico](reports/spike-test-executive/index.html), ou os dashboards técnicos do JMeter de [carga](reports/load-test-report/index.html) e [pico](reports/spike-test-report/index.html).
 
 ## Cenário automatizado
 
@@ -134,7 +134,9 @@ results/
 └── spike-test-summary.md
 
 reports/
+├── load-test-executive/index.html
 ├── load-test-report/index.html
+├── spike-test-executive/index.html
 └── spike-test-report/index.html
 ```
 
