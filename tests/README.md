@@ -29,6 +29,8 @@ package.json               # Comandos npm
 
 O Page Object concentra a interação com a página. Cada teste recebe uma página isolada do Playwright, sem depender de ordem ou estado compartilhado. A lupa é localizada por role; o campo e o conteúdo usam atributos e estruturas estáveis do HTML. Não há esperas fixas.
 
+A navegação inicial solicita ao LiteSpeed a versão anterior à otimização por meio de `LSCWP_CTRL=before_optm`. Isso evita que o bundle otimizado interrompa a inicialização dos handlers do cabeçalho em um contexto limpo de automação, sem substituir a interface, manipular o DOM ou acessar diretamente a URL de resultados. A busca continua sendo realizada pela lupa e pelo formulário visível da página.
+
 ## Instalação e execução
 
 Pré-requisitos: Node.js 20 ou superior e npm. O arquivo `.nvmrc` na raiz fixa a versão principal utilizada no CI.
