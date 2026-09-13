@@ -14,9 +14,10 @@
     "report:api:allure": "cd dog-api-tests && mvn allure:serve",
     "test:performance:load": "cd blazedemo-performance-tests && scripts\\run-load-test.bat",
     "test:performance:spike": "cd blazedemo-performance-tests && scripts\\run-spike-test.bat",
-    "report:performance:load": "node blazedemo-performance-tests\\scripts\\generate-load-report-pt.js && start blazedemo-performance-tests\\reports\\load-test-report-pt\\index.html",
+    "report:performance:load": "start blazedemo-performance-tests\\reports\\load-test-executive\\index.html",
     "report:performance:load:jmeter": "start blazedemo-performance-tests\\reports\\load-test-report\\index.html",
-    "report:performance:spike": "start blazedemo-performance-tests\\reports\\spike-test-report\\index.html"
+    "report:performance:spike": "start blazedemo-performance-tests\\reports\\spike-test-executive\\index.html",
+    "report:performance:spike:jmeter": "start blazedemo-performance-tests\\reports\\spike-test-report\\index.html"
   },
   "keywords": [
     "playwright",
