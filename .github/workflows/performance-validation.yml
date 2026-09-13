@@ -1,0 +1,54 @@
+name: Performance Evidence Validation
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-performance-evidence:
+    name: Validate JMeter plans and recorded evidence
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
+
+      - name: Validate JMX and shell syntax
+        run: |
+          python3 -c "import xml.etree.ElementTree as ET; ET.parse('blazedemo-performance-tests/jmeter/blazedemo-load-test.jmx'); ET.parse('blazedemo-performance-tests/jmeter/blazedemo-spike-test.jmx')"
+          bash -n blazedemo-performance-tests/scripts/run-load-test.sh
+          bash -n blazedemo-performance-tests/scripts/run-spike-test.sh
+          node --check blazedemo-performance-tests/scripts/evaluate-performance.js
+
+      - name: Recalculate load acceptance
+        run: |
+          mkdir -p validation-output
+          node blazedemo-performance-tests/scripts/evaluate-performance.js load blazedemo-performance-tests/results/load-test-results.jtl --ramp-up-seconds=30 > validation-output/load-validation.md
+
+      - name: Recalculate spike acceptance
+        run: |
+          node blazedemo-performance-tests/scripts/evaluate-performance.js spike blazedemo-performance-tests/results/spike-test-results.jtl > validation-output/spike-validation.md
+
+      - name: Upload recalculated summaries
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: performance-evidence-validation
+          path: validation-output/
+          if-no-files-found: warn
+          retention-days: 7

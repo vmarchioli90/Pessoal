@@ -18,12 +18,6 @@ Suíte Playwright que valida a busca de conteúdo do Blog do Agi pela perspectiv
 
 A suíte não fixa quantidade, posição ou lista completa de artigos porque o conteúdo editorial é dinâmico. As assertions continuam verificando o resultado funcional observado pelo usuário.
 
-## Status da validação
-
-Na validação de 13/09/2026, o runner iniciou corretamente os 2 cenários com o mesmo comando do CI, porém ambos foram bloqueados pela condição atual do serviço externo. O Blog do Agi redirecionou para `blog.agibank.com.br`, exibiu a página sem o conteúdo esperado e manteve oculto o campo `input[name="s"]` depois do clique na lupa. O navegador também registrou erro JavaScript do site: `$scope.imagesLoaded is not a function`.
-
-Conforme decisão desta entrega, o teste Web foi preservado exatamente como estava. Não foram adicionados atalhos de navegação, manipulação do DOM, remoção de assertions ou retries extras para fabricar aprovação. Screenshots, vídeos, traces e o relatório HTML ficam disponíveis nos artifacts da execução com falha. Quando o serviço externo voltar a entregar a interface corretamente, a suíte deve ser reexecutada para obter a decisão funcional final.
-
 ## Estrutura
 
 ```text
@@ -37,7 +31,7 @@ O Page Object concentra a interação com a página. Cada teste recebe uma pági
 
 ## Instalação e execução
 
-Pré-requisitos: Node.js 18 ou superior e npm.
+Pré-requisitos: Node.js 20 ou superior e npm. O arquivo `.nvmrc` na raiz fixa a versão principal utilizada no CI.
 
 ```bash
 npm ci

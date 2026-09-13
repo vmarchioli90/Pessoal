@@ -1,0 +1,19 @@
+* text=auto
+
+# Scripts de shell precisam permanecer executáveis e com LF em qualquer SO.
+*.sh text eol=lf
+
+# Scripts e launchers nativos do Windows.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Evidências e assets binários não devem sofrer normalização de conteúdo.
+*.jtl -text
+*.png -text
+*.jpg -text
+*.jpeg -text
+*.gif -text
+*.woff -text
+*.woff2 -text
+*.ttf -text
+*.eot -text
