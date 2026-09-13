@@ -24,6 +24,8 @@ Na validação de 13/09/2026, o runner iniciou corretamente os 2 cenários com o
 
 Conforme decisão desta entrega, o teste Web foi preservado exatamente como estava. Não foram adicionados atalhos de navegação, manipulação do DOM, remoção de assertions ou retries extras para fabricar aprovação. Screenshots, vídeos, traces e o relatório HTML ficam disponíveis nos artifacts da execução com falha. Quando o serviço externo voltar a entregar a interface corretamente, a suíte deve ser reexecutada para obter a decisão funcional final.
 
+O diagnóstico completo, com passos, impacto, resultado esperado e resultado observado, está no [BUG-001 - Lupa não abre o campo de busca](../docs/bugs/BUG-001-blog-search-overlay.md).
+
 ## Estrutura
 
 ```text
@@ -37,7 +39,7 @@ O Page Object concentra a interação com a página. Cada teste recebe uma pági
 
 ## Instalação e execução
 
-Pré-requisitos: Node.js 18 ou superior e npm.
+Pré-requisitos: Node.js 20 ou superior e npm. O arquivo `.nvmrc` na raiz fixa a versão principal utilizada no CI.
 
 ```bash
 npm ci

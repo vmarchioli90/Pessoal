@@ -1,33 +1,41 @@
 {
-  "name": "blog-do-agi-playwright-tests",
+  "name": "teste-tecnico-qa-agibank",
   "version": "1.0.0",
-  "description": "Automacao web da busca de artigos do Blog do Agi com Playwright.",
-  "main": "index.js",
+  "description": "Automação de testes Web, API e performance para o desafio técnico de QA Agibank.",
   "scripts": {
     "test": "playwright test",
     "test:web": "playwright test",
     "test:headed": "playwright test --headed",
-    "test:api": "cd dog-api-tests && mvn clean test",
+    "test:api": "mvn -f dog-api-tests/pom.xml clean test",
     "test:all": "npm run test:web && npm run test:api",
     "report": "playwright show-report",
-    "report:api": "node dog-api-tests\\scripts\\generate-api-report-pt.js && start dog-api-tests\\target\\site\\api-report-pt\\index.html",
+    "report:api": "node dog-api-tests/scripts/generate-api-report-pt.js && node scripts/open-report.js dog-api-tests/target/site/api-report-pt/index.html",
     "report:api:allure": "cd dog-api-tests && mvn allure:serve",
     "test:performance:load": "cd blazedemo-performance-tests && scripts\\run-load-test.bat",
     "test:performance:spike": "cd blazedemo-performance-tests && scripts\\run-spike-test.bat",
-    "report:performance:load": "start blazedemo-performance-tests\\reports\\load-test-executive\\index.html",
-    "report:performance:load:jmeter": "start blazedemo-performance-tests\\reports\\load-test-report\\index.html",
-    "report:performance:spike": "start blazedemo-performance-tests\\reports\\spike-test-executive\\index.html",
-    "report:performance:spike:jmeter": "start blazedemo-performance-tests\\reports\\spike-test-report\\index.html"
+    "report:performance:load": "node scripts/open-report.js blazedemo-performance-tests/reports/load-test-executive/index.html",
+    "report:performance:load:jmeter": "node scripts/open-report.js blazedemo-performance-tests/reports/load-test-report/index.html",
+    "report:performance:spike": "node scripts/open-report.js blazedemo-performance-tests/reports/spike-test-executive/index.html",
+    "report:performance:spike:jmeter": "node scripts/open-report.js blazedemo-performance-tests/reports/spike-test-report/index.html"
   },
   "keywords": [
     "playwright",
     "qa",
     "automation",
-    "blog-do-agi"
+    "blog-do-agi",
+    "rest-assured",
+    "jmeter"
   ],
-  "author": "",
+  "author": "vmarchioli90",
   "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vmarchioli90/teste-tecnico-qa-agibank.git"
+  },
   "devDependencies": {
-    "@playwright/test": "^1.45.0"
+    "@playwright/test": "1.61.1"
   }
 }
