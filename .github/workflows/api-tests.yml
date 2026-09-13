@@ -10,6 +10,9 @@ on:
       - main
       - master
 
+permissions:
+  contents: read
+
 jobs:
   api-tests:
     name: Run API tests
@@ -36,5 +39,14 @@ jobs:
         with:
           name: surefire-reports
           path: dog-api-tests/target/surefire-reports/
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: allure-results
+          path: dog-api-tests/target/allure-results/
           if-no-files-found: warn
           retention-days: 7

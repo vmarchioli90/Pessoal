@@ -40,7 +40,7 @@ dog-api-tests/
 
 - `ApiConfig` resolve a Base URL e cria a especificação comum do RestAssured;
 - `DogApiClient` encapsula caminhos, parâmetros e chamadas;
-- `DogApiTest` descreve os quatro cenários e assertions;
+- `DogApiTest` descreve seis comportamentos, incluindo três execuções parametrizadas por raça;
 - os schemas mantêm os contratos independentes do código Java.
 
 A Base URL segue a prioridade: System Property `baseUrl`, variável `DOG_API_BASE_URL` e fallback `https://dog.ceo/api`.
@@ -48,11 +48,13 @@ A Base URL segue a prioridade: System Property `baseUrl`, variável `DOG_API_BAS
 ### Cobertura
 
 - `GET /breeds/list/all`: HTTP 200, sucesso, coleção não vazia e raça conhecida;
-- `GET /breed/hound/images`: HTTP 200, sucesso, coleção e URLs válidas;
+- `GET /breed/{breed}/images`: três raças, HTTP 200, sucesso, coleção e URLs válidas;
 - `GET /breeds/image/random`: HTTP 200, sucesso e URL válida;
-- raça inexistente: HTTP 404, status e mensagem de erro coerentes.
+- raça inexistente: HTTP 404, status e mensagem de erro coerentes;
+- `GET /breed/hound/list`: coleção não vazia de sub-raças;
+- `GET /breed/hound/images/random`: imagem aleatória pertencente à raça.
 
-Cada resposta também passa por JSON Schema. Contrato e comportamento são validados separadamente, pois uma estrutura válida não garante regra funcional correta. Dados legitimamente dinâmicos, como quantidade de raças e URL exata de imagem, não são congelados. Consulte o [README da API](dog-api-tests/README.md).
+Todas as oito execuções verificam `Content-Type`, status HTTP, JSON Schema e conteúdo. Contrato e comportamento são validados separadamente, pois uma estrutura válida não garante regra funcional correta. Dados legitimamente dinâmicos, como quantidade de raças e URL exata de imagem, não são congelados. Consulte o [README da API](dog-api-tests/README.md).
 
 ## 3. Performance — BlazeDemo
 
@@ -65,7 +67,7 @@ throughput HTTP total >= 250 req/s
 P90 < 2.000 ms
 ```
 
-O avaliador adiciona `erros = 0` como gate interno de qualidade. Essa condição adicional não é confundida com o limite numérico do enunciado.
+O script de validação adiciona `erros = 0` como gate interno de qualidade. Essa condição adicional não é confundida com o limite numérico do enunciado.
 
 O P90, e não o tempo máximo, determina o critério de latência. Assim, o máximo isolado de 3.741 ms observado no pico não invalida o P90 de 468 ms. Erros de protocolo, conexão, assertion ou fluxo continuam reprovando o gate interno.
 
@@ -104,9 +106,10 @@ JTLs, resumos Markdown, relatórios executivos e dashboards JMeter estão versio
 Os workflows em `.github/workflows/` são acionados por push e pull request para `main` ou `master`:
 
 - `playwright.yml`: prepara Node.js 20, instala Chromium, executa `npm test` e publica `playwright-report/`;
-- `api-tests.yml`: prepara Java 17, executa `mvn -f dog-api-tests/pom.xml test` e publica Surefire.
+- `api-tests.yml`: prepara Java 17, executa `mvn -f dog-api-tests/pom.xml test` e publica Surefire e Allure Results;
+- `performance-validation.yml`: valida JMXs e shell scripts, recalcula carga e pico a partir dos JTLs e publica os resumos.
 
-Performance não roda automaticamente. Uma execução de carga recorrente em serviço público seria inadequada e não teria ambiente suficientemente controlado.
+O workflow de performance não dispara carga. Uma execução recorrente em serviço público seria inadequada e não teria ambiente suficientemente controlado; por isso o CI valida os artefatos já produzidos.
 
 ## 5. Limitações e manutenção
 

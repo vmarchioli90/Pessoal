@@ -23,4 +23,18 @@ public class DogApiClient {
                 .when()
                 .get("/breeds/image/random");
     }
+
+    public Response getSubBreeds(String breed) {
+        return ApiConfig.requestSpec()
+                .pathParam("breed", breed)
+                .when()
+                .get("/breed/{breed}/list");
+    }
+
+    public Response getRandomImageByBreed(String breed) {
+        return ApiConfig.requestSpec()
+                .pathParam("breed", breed)
+                .when()
+                .get("/breed/{breed}/images/random");
+    }
 }

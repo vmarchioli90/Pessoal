@@ -21,7 +21,7 @@ O critério oficial recebido possui dois indicadores:
 | P90 | < 2.000 ms |
 | Cenário | Compra concluída |
 
-O fluxo também precisa chegar à confirmação de compra. Como controle de qualidade adicional, o avaliador automatizado exige `erros = 0`. Esse terceiro requisito é um gate interno mais restritivo; não é apresentado como limite numérico do enunciado.
+O fluxo também precisa chegar à confirmação de compra. Como controle de qualidade adicional, o script automatizado exige `erros = 0`. Esse terceiro requisito é um gate interno mais restritivo; não é apresentado como limite numérico do enunciado.
 
 O P90 significa que 90% das requisições da janela avaliada responderam abaixo daquele valor. Um máximo isolado acima de 2.000 ms não reprova o critério de percentil: no pico, por exemplo, o máximo registrado foi 3.741 ms, enquanto o P90 permaneceu em 468 ms. Falhas funcionais ou HTTP, entretanto, são capturadas pelo gate interno de erro zero.
 
@@ -70,6 +70,8 @@ Plano: [`jmeter/blazedemo-spike-test.jmx`](jmeter/blazedemo-spike-test.jmx)
 
 O gate considera exclusivamente os samples do grupo `03 Peak Sustain`. A média da execução completa diluiria o pico com aquecimento e recuperação e, portanto, não representa o critério avaliado.
 
+Este plano valida uma subida abrupta até a vazão nominal exigida; ele não busca o ponto de ruptura nem a capacidade máxima do BlazeDemo. Elevar o pico acima do alvo seria outro experimento, com hipótese, autorização e evidência próprias, e não é necessário para comprovar o critério deste desafio.
+
 ## Cálculo e rastreabilidade
 
 O script [`scripts/evaluate-performance.js`](scripts/evaluate-performance.js):
@@ -88,7 +90,7 @@ O throughput é calculado como `quantidade de samples / duração da janela em s
 
 - Java 17 ou superior;
 - Apache JMeter 5.6.3 ou compatível;
-- Node.js 18 ou superior para o avaliador;
+- Node.js 20 ou superior para o script de validação;
 - comando `jmeter` no `PATH`.
 
 ```bash
@@ -115,6 +117,8 @@ chmod +x scripts/run-load-test.sh scripts/run-spike-test.sh
 ./scripts/run-spike-test.sh
 ```
 
+O repositório marca os dois scripts como executáveis e usa `.gitattributes` para preservar finais de linha LF em qualquer sistema operacional. O `chmod` acima permanece como alternativa para pacotes ZIP que não preservem permissões do Git.
+
 Windows:
 
 ```bat
@@ -122,7 +126,7 @@ scripts\run-load-test.bat
 scripts\run-spike-test.bat
 ```
 
-Cada script executa o JMX em modo não gráfico, grava o JTL, gera o dashboard padrão do JMeter, executa o avaliador e retorna código diferente de zero se o gate falhar.
+Cada script executa o JMX em modo não gráfico, grava o JTL, gera o dashboard padrão do JMeter, executa a validação e retorna código diferente de zero se o gate falhar.
 
 ### Sobrescrita de parâmetros
 
@@ -142,7 +146,16 @@ set THROUGHPUT=16800
 scripts\run-load-test.bat
 ```
 
-Parâmetros de pico disponíveis: `WARMUP_THREADS`, `WARMUP_RAMP`, `WARMUP_DURATION`, `WARMUP_THROUGHPUT`, `SPIKE_THREADS`, `SPIKE_RAMP`, `SPIKE_DURATION`, `PEAK_DURATION`, `PEAK_THROUGHPUT`, `COOLDOWN_THREADS`, `COOLDOWN_RAMP`, `COOLDOWN_DURATION` e `COOLDOWN_THROUGHPUT`.
+Parâmetros de pico disponíveis: `WARMUP_THREADS`, `SPIKE_THREADS`, `COOLDOWN_THREADS`, `WARMUP_DURATION`, `SPIKE_RAMP_UP`, `PEAK_DURATION`, `COOLDOWN_DURATION`, `WARMUP_DELAY`, `SPIKE_DELAY`, `PEAK_DELAY`, `COOLDOWN_DELAY`, `WARMUP_THROUGHPUT`, `PEAK_THROUGHPUT` e `COOLDOWN_THROUGHPUT`.
+
+Relatórios versionados podem ser abertos pela raiz em Windows, Linux ou macOS:
+
+```bash
+npm run report:performance:load
+npm run report:performance:load:jmeter
+npm run report:performance:spike
+npm run report:performance:spike:jmeter
+```
 
 ## Evidências versionadas
 
@@ -160,13 +173,13 @@ reports/
 `-- spike-test-report/index.html
 ```
 
-Os JTLs, resumos e dashboards de performance não estão no `.gitignore`: eles são versionados intencionalmente para auditoria. Os arquivos `README.md` encontrados dentro dos dashboards são dependências estáticas geradas pelo JMeter e não documentação autoral deste projeto.
+Os JTLs, resumos e dashboards de performance não estão no `.gitignore`: eles são versionados intencionalmente para rastreabilidade. Os arquivos `README.md` encontrados dentro dos dashboards são dependências estáticas geradas pelo JMeter e não documentação autoral deste projeto.
 
 ## Limitações e reprodução responsável
 
 Resultados de performance dependem do gerador, rede, serviço-alvo e concorrência externa. A aprovação demonstra que o critério foi atendido na janela e no ambiente registrados; não garante capacidade universal do sistema. Uma reprovação isolada também não identifica sozinha o gargalo.
 
-Os testes de performance não são executados pelo GitHub Actions para evitar carga automática sobre um serviço público. Para revisar a implementação sem produzir nova carga, é possível validar o XML dos JMXs, a sintaxe dos scripts e reprocessar os JTLs existentes com o avaliador.
+O workflow [`.github/workflows/performance-validation.yml`](../.github/workflows/performance-validation.yml) não gera carga. Ele valida o XML dos JMXs, a sintaxe dos scripts e reprocessa os JTLs existentes para confirmar o aceite em `push`, `pull_request` e execução manual. Os resumos recalculados são publicados como artifact. A carga real continua exclusivamente manual para evitar requisições automáticas contra um serviço público.
 
 ## Fluxo de branches
 
