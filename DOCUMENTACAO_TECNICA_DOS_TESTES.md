@@ -19,6 +19,7 @@ O Page Object concentra a interação e mantém os testes orientados a comportam
 - busca por `FGTS`: URL, título e ao menos um artigo relacionado;
 - busca por termo inexistente: URL e mensagem de ausência de resultados;
 - suporte explícito ao redirecionamento de `blogdoagi.com.br` para `blog.agibank.com.br`;
+- carregamento da página anterior à otimização do LiteSpeed para preservar os handlers reais da busca em contextos limpos;
 - locators semânticos e auto-wait do Playwright, sem sleeps fixos;
 - contexto isolado por teste;
 - screenshot em falha, trace na primeira repetição e relatório HTML.

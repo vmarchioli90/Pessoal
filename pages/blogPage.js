@@ -14,7 +14,7 @@ class BlogPage {
   }
 
   async open() {
-    await this.page.goto('/', { waitUntil: 'domcontentloaded' });
+    await this.page.goto('/?LSCWP_CTRL=before_optm', { waitUntil: 'domcontentloaded' });
     await this.acceptCookiesIfVisible();
     await expect(this.page).toHaveURL(/blog(doagi\.com\.br|\.agibank\.com\.br)/i);
   }
