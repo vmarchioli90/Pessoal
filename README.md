@@ -1,145 +1,108 @@
-# Projetos de QA Automation
+# Teste técnico de QA
 
-Repositório com três automações desenvolvidas para um teste técnico de QA:
+Repositório com três frentes independentes de automação: testes Web do Blog do Agi, testes de API da Dog API e testes de performance do fluxo de compra do BlazeDemo. A documentação prioriza execução reproduzível, evidências auditáveis e critérios de aprovação explícitos.
 
-- Web: busca de artigos no Blog do Agi com Playwright.
-- API: endpoints da Dog API com Java, RestAssured, JUnit 5 e JSON Schema.
-- Performance: fluxo de compra de passagem no BlazeDemo com Apache JMeter.
+## Visão executiva
 
-O projeto prioriza testes legíveis, separação de responsabilidades, configuração simples e execução reproduzível localmente ou em CI.
+| Frente | Objetivo | Stack | Situação documentada |
+| --- | --- | --- | --- |
+| Web | Validar buscas com e sem resultados no Blog do Agi | Playwright, JavaScript, Node.js | 2 cenários automatizados e executados no CI |
+| API | Validar comportamento e contrato da Dog API | Java 17, Maven, JUnit 5, RestAssured, JSON Schema | 4 cenários automatizados e executados no CI |
+| Performance | Validar a jornada de compra do BlazeDemo sob carga e pico | JMeter 5.6.3, Node.js | Carga e pico aprovados nas evidências de 11/09/2026 |
 
-## Tecnologias
+Resultado de performance registrado:
 
-- Node.js 18+ e Playwright
-- Java 17, Maven, JUnit 5, RestAssured, AssertJ e Allure
-- JSON Schema para validação de contrato da API
-- Apache JMeter para testes de carga e pico
-- GitHub Actions para Web e API
+| Cenário | Throughput HTTP total | P90 | Erros | Decisão |
+| --- | ---: | ---: | ---: | --- |
+| Carga | 268,58 req/s | 460 ms | 0,00% | Aprovado |
+| Pico — sustentação | 264,42 req/s | 468 ms | 0,00% | Aprovado |
+
+O critério oficial é `throughput >= 250 req/s` e `P90 < 2.000 ms`. O gate automatizado acrescenta `erros = 0` como requisito interno de qualidade. O throughput representa a soma das quatro requisições HTTP da jornada, não compras concluídas por segundo.
 
 ## Estrutura
 
 ```text
 .
 |-- .github/workflows/                 # Pipelines Web e API
-|-- pages/                             # Page Object do Playwright
-|-- tests/                             # Cenários Web
+|-- pages/                             # Page Object do Blog do Agi
+|-- tests/                             # Cenários e documentação Web
 |-- dog-api-tests/                     # Projeto Maven da Dog API
-|   `-- src/test/resources/schemas/    # Contratos JSON
-|-- blazedemo-performance-tests/       # Planos, scripts e resultados JMeter
+|-- blazedemo-performance-tests/       # JMX, scripts e evidências de performance
 |-- DOCUMENTACAO_TECNICA_DOS_TESTES.md
 |-- package.json
 `-- playwright.config.js
 ```
 
-## Instalação
+## Pré-requisitos
 
-Pré-requisitos:
+- Node.js 18 ou superior e npm;
+- Java 17 e Maven;
+- Chromium do Playwright para os testes Web;
+- Apache JMeter 5.6.3 ou compatível no `PATH` somente para novas execuções de performance.
 
-- Node.js 18 ou superior e npm
-- Java 17 e Maven
-- Apache JMeter com o diretório `bin` disponível no `PATH` para performance
-
-Dependências Web:
+Instalação Web:
 
 ```bash
 npm ci
 npx playwright install chromium
 ```
 
-As dependências da API são resolvidas automaticamente pelo Maven.
+As dependências da API são resolvidas pelo Maven.
 
-## Execução
+## Execução rápida
 
-### Web
-
-```bash
-npm run test:web
-```
-
-Com o navegador visível:
+Web — mesmo comando do CI:
 
 ```bash
-npm run test:headed
+npm test
 ```
 
-### API
+API — mesmo comando do CI, executado pela raiz:
 
 ```bash
-npm run test:api
+mvn -f dog-api-tests/pom.xml test
 ```
 
-Os testes usam `https://dog.ceo/api` por padrão. Outra URL pode ser fornecida, nesta ordem de prioridade:
-
-1. System Property Maven `baseUrl`;
-2. variável de ambiente `DOG_API_BASE_URL`;
-3. URL padrão.
-
-Exemplos:
-
-```bash
-cd dog-api-tests
-mvn clean test -DbaseUrl=https://dog.ceo/api
-```
-
-```powershell
-$env:DOG_API_BASE_URL = "https://dog.ceo/api"
-mvn -f dog-api-tests/pom.xml clean test
-```
-
-Para executar Web e API pela raiz:
+Web e API em sequência:
 
 ```bash
 npm run test:all
 ```
 
-### Performance
+Performance no Windows:
 
-No Windows, pela raiz:
-
-```bash
+```bat
 npm run test:performance:load
 npm run test:performance:spike
 ```
 
-No Linux/macOS:
-
-```bash
-cd blazedemo-performance-tests
-chmod +x scripts/run-load-test.sh scripts/run-spike-test.sh
-./scripts/run-load-test.sh
-./scripts/run-spike-test.sh
-```
-
-Os valores de threads, duração, ramp-up e throughput podem ser sobrescritos por variáveis descritas no [README de performance](blazedemo-performance-tests/README.md).
-
-Como o alvo é um ambiente público, as execuções devem ser planejadas e os resultados interpretados considerando rede, máquina geradora de carga e disponibilidade do serviço.
+Uma nova carga contra serviço público só deve ser disparada com autorização e ambiente controlado. Consulte parâmetros, metodologia e comandos Linux/macOS no [README de performance](blazedemo-performance-tests/README.md).
 
 ## Relatórios e evidências
 
-- Web: `playwright-report/index.html`
-- API: `dog-api-tests/target/surefire-reports/` e `dog-api-tests/target/allure-results/`
-- Performance: `blazedemo-performance-tests/results/` e `blazedemo-performance-tests/reports/`
+- Web: `playwright-report/index.html`, gerado localmente e publicado como artifact pelo CI;
+- API: `dog-api-tests/target/surefire-reports/` e `dog-api-tests/target/allure-results/`, gerados localmente; o Surefire é publicado pelo CI;
+- Performance: arquivos JTL, resumos Markdown e dashboards HTML em [`blazedemo-performance-tests/results/`](blazedemo-performance-tests/results/) e [`blazedemo-performance-tests/reports/`](blazedemo-performance-tests/reports/).
 
-Comandos auxiliares:
+Os artefatos locais de Web e API são ignorados pelo Git. As evidências históricas de performance estão deliberadamente versionadas para permitir auditoria dos números apresentados.
 
-```bash
-npm run report
-npm run report:api
-npm run report:performance:load
-npm run report:performance:spike
-```
+## CI/CD e branches
 
-Artefatos gerados são ignorados pelo Git. Os resumos Markdown de performance permanecem versionados para registrar resultados reais e a conclusão dos critérios.
+Os workflows são acionados por `push` e `pull_request` direcionados a `main` ou `master`:
 
-## CI/CD
+- [`playwright.yml`](.github/workflows/playwright.yml): Node.js 20, Chromium, `npm test` e relatório Playwright;
+- [`api-tests.yml`](.github/workflows/api-tests.yml): Java 17, cache Maven, `mvn -f dog-api-tests/pom.xml test` e relatórios Surefire.
 
-Os workflows em `.github/workflows/` executam a cada push ou pull request para `main`/`master`:
+O fluxo do repositório usa apenas:
 
-- Playwright: instala o Chromium, executa os testes Web e publica o relatório HTML.
-- Dog API: configura Java 17, executa os testes Maven e publica os relatórios Surefire.
+- `develop`: desenvolvimento e validação dos ajustes;
+- `main`: versão estável publicada no GitHub.
 
-## Documentação
+Performance não roda automaticamente no CI para evitar carga recorrente sobre um serviço público sem controle do ambiente.
 
-- [Documentação técnica consolidada](DOCUMENTACAO_TECNICA_DOS_TESTES.md)
-- [Dog API](dog-api-tests/README.md)
-- [Performance com JMeter](blazedemo-performance-tests/README.md)
+## Documentação por frente
+
+- [Web — Blog do Agi](tests/README.md)
+- [API — Dog API](dog-api-tests/README.md)
+- [Performance — BlazeDemo](blazedemo-performance-tests/README.md)
+- [Decisões técnicas consolidadas](DOCUMENTACAO_TECNICA_DOS_TESTES.md)

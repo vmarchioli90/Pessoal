@@ -33,7 +33,7 @@
     th:first-child,td:first-child { text-align:left; }
     th { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.05em; background:#f8fafc; }
     .table-scroll { overflow-x:auto; }
-    .criteria { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+    .criteria { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; }
     .criterion { padding:16px; border-radius:10px; border:1px solid var(--line); }
     .criterion b { display:block; font-size:20px; margin:5px 0; }
     .badge { font-size:12px; font-weight:800; text-transform:uppercase; }
@@ -46,8 +46,8 @@
     ul { margin:8px 0 0; padding-left:20px; }
     code { font-family:"Cascadia Code",Consolas,monospace; font-size:12px; }
     footer { color:var(--muted); text-align:center; padding:0 20px 30px; font-size:12px; }
-    @media(max-width:850px){ .grid,.criteria,.meta,.chart-grid{grid-template-columns:1fr 1fr;} }
-    @media(max-width:560px){ .grid,.criteria,.meta,.chart-grid{grid-template-columns:1fr;} header{padding-top:34px;} }
+    @media(max-width:850px){ .grid,.meta,.chart-grid{grid-template-columns:1fr 1fr;} }
+    @media(max-width:560px){ .grid,.meta,.chart-grid{grid-template-columns:1fr;} header{padding-top:34px;} }
   </style>
 </head>
 <body>
@@ -78,12 +78,13 @@
       </div>
     </section>
     <section class="panel">
-      <h2>Decisão por critério</h2>
+      <h2>Critérios oficiais de aceitação</h2>
       <div class="criteria">
         <article class="criterion"><span class="badge ok">Atendido</span><b>264,42 req/s</b><span>Throughput mínimo: 250 req/s</span></article>
         <article class="criterion"><span class="badge ok">Atendido</span><b>468 ms</b><span>Limite: &lt; 2.000 ms</span></article>
-        <article class="criterion"><span class="badge ok">Atendido</span><b>0 erros</b><span>Fluxo deve concluir com sucesso</span></article>
       </div>
+      <h3>Gate interno de qualidade</h3>
+      <div class="criteria"><article class="criterion"><span class="badge ok">Atendido</span><b>0 erros</b><span>Limite interno: zero erro funcional ou técnico</span></article></div>
     </section>
     <section class="panel">
       <h2>Comportamento durante a janela</h2>
@@ -160,13 +161,13 @@
     <section class="panel">
       <h2>Leitura técnica</h2>
       <h3>Metodologia</h3>
-      <ul><li>Somente os quatro samplers HTTP do fluxo foram contabilizados.</li><li>O Transaction Controller foi excluído para evitar inflação artificial da vazão.</li><li>Somente a sustentação do pico foi usada na decisão.</li><li>O P90 usa o método nearest-rank.</li></ul>
+      <ul><li>Somente os quatro samplers HTTP do fluxo foram contabilizados.</li><li>O throughput é agregado entre os quatro endpoints e não equivale a compras completas por segundo.</li><li>O Transaction Controller foi excluído para evitar inflação artificial da vazão.</li><li>Somente a sustentação do pico foi usada na decisão.</li><li>O P90 usa o método nearest-rank; o máximo isolado não substitui esse critério.</li></ul>
       <h3>Riscos e limitações</h3>
       <ul><li>Ambiente público e latência de rede estão incluídos no resultado.</li><li>Foi utilizado um único gerador, sem telemetria do servidor.</li><li>A aprovação é válida para esta execução e este perfil; não representa capacidade máxima.</li></ul>
       <h3>Conclusão</h3>
-      <p>A execução foi <strong>aprovada</strong>: 264,42 req/s, P90 de 468 ms e 0 erro(s). Os critérios foram satisfeitos simultaneamente na janela observada.</p>
+      <p>A execução foi <strong>aprovada</strong>: 264,42 req/s, P90 de 468 ms e 0 erro(s). Os critérios oficiais e o gate interno de erro zero foram atendidos na janela avaliada.</p>
     </section>
   </main>
-  <footer>Relatório gerado automaticamente a partir do JTL · 11/09/2026, 22:06:49</footer>
+  <footer>Relatório gerado automaticamente a partir do JTL · 13/09/2026, 00:26:00</footer>
 </body>
 </html>

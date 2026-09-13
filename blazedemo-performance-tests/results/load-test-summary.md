@@ -1,6 +1,6 @@
 # Relatório Executivo - Teste de Carga
 
-> **Decisão: APROVADO.** Todos os critérios foram atendidos simultaneamente na janela avaliada.
+> **Decisão: APROVADO.** Os critérios oficiais e o gate interno de erro zero foram atendidos na janela avaliada.
 
 ## Identificação
 
@@ -14,12 +14,17 @@
 | Perfil de carga | 150 usuários; alvo de 270 req/s; execução total de 5 minutos |
 | Evidência SHA-256 | `2da32e2becd38662a1e0d6938c7962a8ea2e901d641631b27cd17c6791179a09` |
 
-## Critérios de aceitação
+## Critérios oficiais de aceitação
 
 | Critério | Resultado | Limite | Situação |
 | --- | ---: | ---: | --- |
 | Throughput HTTP | 268,58 req/s | >= 250 req/s | **Atendido** |
 | Percentil 90 | 460 ms | < 2.000 ms | **Atendido** |
+
+## Gate interno de qualidade
+
+| Indicador adicional | Resultado | Limite interno | Situação |
+| --- | ---: | ---: | --- |
 | Erros funcionais/técnicos | 0 (0,00%) | 0 | **Atendido** |
 
 ## Indicadores consolidados
@@ -40,6 +45,7 @@
 ## Metodologia e rastreabilidade
 
 - Foram considerados somente os quatro samplers HTTP do fluxo de compra.
+- O throughput é agregado entre os quatro endpoints e não representa compras completas por segundo.
 - O sampler sintético do Transaction Controller foi excluído para não inflar a vazão.
 - O ramp-up foi excluído; a decisão usa somente a fase estável.
 - O P90 foi calculado pelo método nearest-rank sobre os tempos decorridos da janela.
@@ -59,4 +65,4 @@
 
 ## Conclusão técnica
 
-A execução foi **APROVADA**. O fluxo apresentou 268,58 req/s, P90 de 460 ms e 0 erro(s). Há evidência suficiente para afirmar que o critério de aceite foi satisfeito na janela observada.
+A execução foi **APROVADA**. O fluxo apresentou 268,58 req/s, P90 de 460 ms e 0 erro(s). Os critérios oficiais e o gate interno de erro zero foram atendidos na janela avaliada.

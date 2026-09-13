@@ -11,13 +11,30 @@ function readResults() {
     throw new Error(`Resultados do Allure não encontrados em: ${resultsDir}`);
   }
 
-  return fs.readdirSync(resultsDir)
+  const allResults = fs.readdirSync(resultsDir)
     .filter((file) => file.endsWith("-result.json"))
     .map((file) => {
       const content = fs.readFileSync(path.join(resultsDir, file), "utf8");
       return JSON.parse(content);
-    })
-    .sort((a, b) => a.start - b.start);
+    });
+
+  if (allResults.length === 0) {
+    throw new Error(`Nenhum resultado de teste encontrado em: ${resultsDir}`);
+  }
+
+  // Allure preserva resultados anteriores quando `mvn test` é executado sem
+  // `clean`. Mantemos somente a ocorrência mais recente de cada cenário para
+  // que o relatório represente uma única execução lógica, sem duplicidades.
+  const latestByScenario = new Map();
+  for (const result of allResults) {
+    const scenarioId = result.historyId || result.fullName || result.name;
+    const current = latestByScenario.get(scenarioId);
+    if (!current || (result.stop || result.start) > (current.stop || current.start)) {
+      latestByScenario.set(scenarioId, result);
+    }
+  }
+
+  return [...latestByScenario.values()].sort((a, b) => a.start - b.start);
 }
 
 function labelValue(test, name) {
