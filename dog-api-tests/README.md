@@ -80,6 +80,12 @@ $env:DOG_API_BASE_URL = "https://dog.ceo/api"
 mvn clean test
 ```
 
+Com variável de ambiente no Linux ou macOS:
+
+```bash
+DOG_API_BASE_URL=https://dog.ceo/api mvn clean test
+```
+
 ## Relatórios e evidências
 
 Após a execução, o Maven gera:
@@ -112,7 +118,7 @@ O gerador mantém a ocorrência mais recente de cada cenário quando `target/all
 
 ## CI/CD
 
-O workflow [`.github/workflows/api-tests.yml`](../.github/workflows/api-tests.yml) executa em `push` e `pull_request` para `main` ou `master`:
+O workflow [`.github/workflows/api-tests.yml`](../.github/workflows/api-tests.yml) executa em Ubuntu, macOS e Windows, em `push` e `pull_request` para `main` ou `master`:
 
 1. prepara Java 17 (Temurin) e o cache Maven;
 2. executa `mvn -f dog-api-tests/pom.xml test`;

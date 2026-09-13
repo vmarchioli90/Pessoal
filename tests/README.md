@@ -67,7 +67,7 @@ O arquivo `playwright.config.js` define Chromium como projeto, timeout de 30 seg
 
 ## CI/CD
 
-O workflow [`.github/workflows/playwright.yml`](../.github/workflows/playwright.yml) executa em `push` e `pull_request` para `main` ou `master`:
+O workflow [`.github/workflows/playwright.yml`](../.github/workflows/playwright.yml) executa em Ubuntu, macOS e Windows, em `push` e `pull_request` para `main` ou `master`:
 
 1. prepara Node.js 20 e o cache npm;
 2. instala dependências com `npm ci`;

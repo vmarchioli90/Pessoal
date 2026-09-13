@@ -15,8 +15,12 @@ permissions:
 
 jobs:
   api-tests:
-    name: Run API tests
-    runs-on: ubuntu-latest
+    name: Run API tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
       - name: Checkout repository
@@ -37,7 +41,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: surefire-reports
+          name: surefire-reports-${{ runner.os }}
           path: dog-api-tests/target/surefire-reports/
           if-no-files-found: warn
           retention-days: 7
@@ -46,7 +50,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: allure-results
+          name: allure-results-${{ runner.os }}
           path: dog-api-tests/target/allure-results/
           if-no-files-found: warn
           retention-days: 7
