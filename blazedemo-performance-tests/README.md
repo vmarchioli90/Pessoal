@@ -154,15 +154,12 @@ blazedemo-performance-tests/
 └── README.md
 ```
 
-## Gitflow adotado
+## Fluxo de branches
 
-- `main`: versão estável e entregue.
-- `develop`: integração das alterações.
-- `feature/performance-acceptance`: ajuste dos planos e gate de aceite.
-- `feature/version-performance-reports`: versionamento das evidências.
-- `docs/performance-readme`: documentação.
+- `develop`: branch de trabalho, usada para implementar e validar os ajustes.
+- `main`: versão estável, utilizada para a entrega no GitHub.
 
-As branches de trabalho são integradas em `develop`; após a validação, `develop` é promovida para `main`.
+As alterações são desenvolvidas e testadas em `develop`. Depois da validação, `develop` é integrada à `main` e as duas branches são enviadas ao repositório remoto.
 
 ## Decisão do aceite
 
