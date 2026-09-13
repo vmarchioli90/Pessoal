@@ -103,6 +103,13 @@ node --version
 
 ## Execução
 
+Pela raiz do repositório, os mesmos comandos funcionam em Windows, Linux e macOS. O launcher Node.js seleciona automaticamente o `.bat` ou `.sh` adequado:
+
+```bash
+npm run test:performance:load
+npm run test:performance:spike
+```
+
 Entre na pasta:
 
 ```bash
@@ -179,7 +186,7 @@ Os JTLs, resumos e dashboards de performance não estão no `.gitignore`: eles s
 
 Resultados de performance dependem do gerador, rede, serviço-alvo e concorrência externa. A aprovação demonstra que o critério foi atendido na janela e no ambiente registrados; não garante capacidade universal do sistema. Uma reprovação isolada também não identifica sozinha o gargalo.
 
-O workflow [`.github/workflows/performance-validation.yml`](../.github/workflows/performance-validation.yml) não gera carga. Ele valida o XML dos JMXs, a sintaxe dos scripts e reprocessa os JTLs existentes para confirmar o aceite em `push`, `pull_request` e execução manual. Os resumos recalculados são publicados como artifact. A carga real continua exclusivamente manual para evitar requisições automáticas contra um serviço público.
+O workflow [`.github/workflows/performance-validation.yml`](../.github/workflows/performance-validation.yml) não gera carga. Em Ubuntu, macOS e Windows, ele valida o XML dos JMXs, a sintaxe POSIX, o launcher específico do sistema e reprocessa os JTLs existentes para confirmar o aceite em `push`, `pull_request` e execução manual. Os resumos recalculados são publicados como artifacts separados por sistema. A carga real continua exclusivamente manual para evitar requisições automáticas contra um serviço público.
 
 ## Fluxo de branches
 

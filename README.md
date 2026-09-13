@@ -76,14 +76,14 @@ Web e API em sequência:
 npm run test:all
 ```
 
-Performance no Windows:
+Performance — mesmo comando em Windows, Linux e macOS:
 
 ```bat
 npm run test:performance:load
 npm run test:performance:spike
 ```
 
-Uma nova carga contra serviço público só deve ser disparada com autorização e ambiente controlado. Consulte parâmetros, metodologia e comandos Linux/macOS no [README de performance](blazedemo-performance-tests/README.md).
+O launcher seleciona automaticamente o script `.bat` no Windows ou `.sh` no Linux e macOS. Uma nova carga contra serviço público só deve ser disparada com autorização e ambiente controlado. Consulte parâmetros e metodologia no [README de performance](blazedemo-performance-tests/README.md).
 
 ## Relatórios e evidências
 
@@ -104,11 +104,11 @@ Os comandos acima abrem o relatório correspondente em Windows, Linux ou macOS.
 
 ## CI/CD e branches
 
-Os workflows são acionados por `push` e `pull_request` direcionados a `main` ou `master`:
+Os workflows são acionados por `push` e `pull_request` direcionados a `main` ou `master`, com matriz para Ubuntu, macOS e Windows:
 
 - [`playwright.yml`](.github/workflows/playwright.yml): Node.js 20, Chromium, `npm test` e relatório Playwright;
 - [`api-tests.yml`](.github/workflows/api-tests.yml): Java 17, cache Maven, `mvn -f dog-api-tests/pom.xml test`, Surefire e Allure Results;
-- [`performance-validation.yml`](.github/workflows/performance-validation.yml): valida JMXs e scripts e recalcula o aceite a partir dos JTLs versionados, sem gerar nova carga.
+- [`performance-validation.yml`](.github/workflows/performance-validation.yml): valida JMXs, scripts POSIX e o launcher de cada sistema, além de recalcular o aceite a partir dos JTLs versionados, sem gerar nova carga.
 
 O fluxo do repositório usa apenas:
 

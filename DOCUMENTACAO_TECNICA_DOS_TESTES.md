@@ -104,11 +104,11 @@ JTLs, resumos Markdown, relatórios executivos e dashboards JMeter estão versio
 
 ## 4. CI/CD e evidências
 
-Os workflows em `.github/workflows/` são acionados por push e pull request para `main` ou `master`:
+Os workflows em `.github/workflows/` são acionados por push e pull request para `main` ou `master`. Cada suíte usa uma matriz com Ubuntu, macOS e Windows:
 
 - `playwright.yml`: prepara Node.js 20, instala Chromium, executa `npm test` e publica `playwright-report/`;
 - `api-tests.yml`: prepara Java 17, executa `mvn -f dog-api-tests/pom.xml test` e publica Surefire e Allure Results;
-- `performance-validation.yml`: valida JMXs e shell scripts, recalcula carga e pico a partir dos JTLs e publica os resumos.
+- `performance-validation.yml`: valida JMXs, shell scripts e o launcher multiplataforma, recalcula carga e pico a partir dos JTLs e publica os resumos por sistema.
 
 O workflow de performance não dispara carga. Uma execução recorrente em serviço público seria inadequada e não teria ambiente suficientemente controlado; por isso o CI valida os artefatos já produzidos.
 
